@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experience</title>
+  </head>
+  <body>
+    <form action="#">
+      <fieldset>
+        <legend><h2>We appreciate your sharing!</h2></legend>
+        <!-- full name -->
+        <label for="fullname">Full Name : </label>
+        <input type="text" name="fullname" placeholder="Smile" /> <br />
+        <br />
+
+        <!-- gender -->
+        <label for="gender">Gender : </label>
+        <input type="radio" id="male" name="gender" value="Male" />
+        <label for="male">Male</label> &nbsp; &nbsp;
+        <input type="radio" id="female" name="gender" value="Female" checked />
+
+        <label for="female">Female</label>
+
+        <!-- email -->
+        <br /><br />
+        <label for="email">Email : </label>
+        <input type="email" name="email" placeholder="smile@gmail.com" />
+
+        <!-- password -->
+        <br /><br />
+        <label for="password">Password : </label>
+        <input type="password" name="password" placeholder="******" />
+
+        <!-- birthday -->
+        <br /><br />
+        <label for="birthday">Birthday : </label>
+        <input type="date" name="birthday" />
+
+        <!-- profile -->
+        <br />
+        <br />
+        <label for="profile">Profile : </label>
+        <input type="file" name="profile" />
+
+        <!-- local's contact -->
+        <br />
+        <br />
+        <label for="local_contact">Local's Contact : </label> &nbsp;
+        <span><sup>+855</sup></span> &nbsp;
+        <input
+          type="tel"
+          name="contact"
+          placeholder="12 345 678"
+          pattern="[0-9]{2} [0-9]{3} [0-9]{3}"
+          required
+        />
+        &nbsp; &nbsp; <mark><small>Format: 12 345 678</small></mark>
+
+        <!-- survey visited places -->
+        <br />
+        <p>Among these places, how many have you visited?</p>
+        <input
+          type="checkbox"
+          id="koh_touch"
+          name="koh_touch"
+          value="Koh Touch"
+        />
+        <label for="koh_touch">Koh Touch</label><br />
+        <br />
+
+        <input
+          type="checkbox"
+          id="long_set_beach"
+          name="long_set_beach"
+          value="Long Set Beach"
+        />
+        <label for="long_set_beach">Long Set Beach</label><br />
+        <br />
+
+        <input
+          type="checkbox"
+          id="sok_san_beach"
+          name="sok_san_beach"
+          value="Sok San Beach"
+        />
+        <label for="sok_san_beach">Sok San Beach</label><br />
+        <br />
+
+        <input
+          type="checkbox"
+          id="prek_svay"
+          name="prek_svay"
+          value="Prek Svay"
+        />
+        <label for="prek_svay">Prek Svay</label>
+
+        <!-- question to know whether how much they satisfy -->
+        <br />
+        <br />
+        <label for="satisfied_level"
+          >How much do you satisfy <b>Koh Rong</b> ?</label
+        >
+        <br />
+        <br />
+        <input
+          type="radio"
+          id="satisfied_level"
+          name="satisfied_level"
+          value="Too Bad Experience"
+        />
+        <label for="too_bad_experience">Too Bad Experience</label> &nbsp;
+        <meter
+          id="bad"
+          min="0"
+          max="100"
+          low="60"
+          high="66"
+          optimum="80"
+          value="30"
+        ></meter>
+
+        <br />
+        <br />
+        <input
+          type="radio"
+          id="satisfied_level"
+          name="satisfied_level"
+          value="Average"
+        />
+        <label for="average">Average</label> &nbsp;
+        <meter
+          id="average"
+          min="0"
+          max="100"
+          low="60"
+          high="66"
+          optimum="80"
+          value="60"
+        ></meter>
+
+        <br />
+        <br />
+        <input
+          type="radio"
+          id="satisfied_level"
+          name="satisfied_level"
+          value="Very Satisfied"
+        />
+        <label for="very_satisfied">Very Satisfied</label> &nbsp;
+        <meter
+          id="average"
+          min="0"
+          max="100"
+          low="60"
+          high="66"
+          optimum="80"
+          value="100"
+        ></meter>
+
+        <!-- feedback -->
+        <br />
+        <br />
+        <textarea
+          name="feedback"
+          rows="16"
+          cols="80"
+          placeholder="Please give us your overall feedback"
+        ></textarea>
+
+        <!-- submit button -->
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+      </fieldset>
+    </form>
+  </body>
+</html>
