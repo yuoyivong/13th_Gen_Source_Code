@@ -93,7 +93,7 @@ body {
 /* image 2 */
 .image2 {
   background-image: url("./images/image2.jpg");
-  transition: background-color 2s ease;
+  transition: background-color 2s ease, transform 2s ease;
   height: 320px;
   width: 350px;
   background-blend-mode: overlay;
@@ -204,7 +204,8 @@ body {
 }
 
 /* episodes listings */
-.episodes-listings {
+.episodes-listings,
+footer {
   padding: 20px 50px;
   font-family: "Nunito", serif;
   font-optical-sizing: auto;
@@ -247,7 +248,6 @@ thead th {
 tr,
 th {
   text-align: center;
-  /* border: #213555 2px solid; */
   padding: 5px 0px;
   border-radius: 10px;
 }
@@ -271,5 +271,16 @@ th {
 }
 
 /* apply hover style to other rows */
-.episodes-listings td:hover {
+.episodes-listings .td-hover:hover {
+  background-color: #8e1616;
+  color: white;
+}
+
+/* apply style to footer */
+footer {
+  text-align: center;
+  font-weight: bold;
+  background-color: #f5efe7;
+  color: #213555;
+  margin-top: 80px;
 }
