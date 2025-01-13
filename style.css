@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+body {
+  margin: 0;
+  font-family: "Rubik", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+nav {
+  display: flex;
+  /* background-color: #fbfbfb; */
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 100px;
+}
+
+.option {
+  display: flex;
+  text-transform: capitalize;
+}
+
+.border-right-style-to-each-option {
+  border-right: 2px solid black;
+  padding: 0px 20px;
+}
+
+#feedback {
+  padding: 0px 20px;
+}
+
+/* style contact button */
+button {
+  padding: 10px 20px;
+  text-transform: capitalize;
+  border-radius: 100px;
+  background-color: white;
+  border: none;
+  font-family: "Rubik", serif;
+  font-size: 16px;
+  box-shadow: 0 4px 8px 0 rgba(232, 249, 255, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* section 1 style */
+.section1-style {
+  background-color: #f5f5f5;
+  margin: 30px 170px;
+  padding: 40px;
+  border-radius: 25px;
+}
+
+.long-card img,
+.short-card-2 img {
+  box-shadow: 5px 5px 8px 0 rgba(139, 132, 132, 0.8);
+}
+
+/* define flex style on card */
+.flex-card {
+  display: flex;
+  gap: 30px;
+}
+
+/* set style to the short card */
+.short-card {
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  width: 300px;
+  margin: 30px 0px;
+}
+
+/* set profile to rounded */
+.short-card > img {
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+
+.short-card p {
+  text-transform: capitalize;
+  line-height: 5px;
+}
+
+.short-card div:first-of-type {
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.short-card :not(div:first-of-type) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* add a hand and heart over the small card */
+/* .over-short-card {
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  background-color: #f89f52;
+  padding: 10px;
+  border-radius: 15px;
+} */
+
+.long-card {
+  position: relative;
+}
+
+.long-card > img {
+  width: 270px;
+  height: auto;
+  border-radius: 20px;
+}
+
+.details-over-image {
+  position: absolute;
+  bottom: 0;
+  width: 190px;
+  background-color: rgb(255, 255, 255, 0.8);
+  margin: 20px 30px;
+  padding: 0 10px;
+  border-radius: 15px;
+}
+
+#location,
+#rating {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.location-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* .short-card-long-card-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+
+.short-card-2 {
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  width: 300px;
+  margin: 30px 0px;
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+
+.short-card-2 img {
+  border-radius: 15px;
+  border: 1px solid white;
+}
+
+.parent {
+  position: inherit;
+}
+
+.absolute-pic {
+  position: absolute;
+  left: 205px;
+}
+
+.absolute-pic-2 {
+  position: absolute;
+  left: 250px;
+  z-index: 100;
+}
