@@ -395,6 +395,7 @@ footer {
 .third-section .left-side-text-third-section {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column-reverse;
   width: 35%;
 }
 
