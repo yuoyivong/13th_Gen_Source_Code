@@ -249,6 +249,11 @@ nav > button:focus {
   justify-content: center;
 }
 
+/* add rounded circle around play button when hover */
+/* #play-button:hover {
+  outline: 1.5px solid #009fbd;
+} */
+
 .explore-button {
   display: flex;
   gap: 20px;
