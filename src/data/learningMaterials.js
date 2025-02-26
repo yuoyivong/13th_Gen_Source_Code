@@ -9,8 +9,7 @@ export const learningMaterials = [
   },
   {
     id: 2,
-    image:
-      "https://i.pinimg.com/736x/e4/3e/4c/e43e4cd41ddffc21d2e6600dfca20306.jpg",
+    image: "https://kintinstitute.org/wp-content/uploads/2016/03/css-logo.png",
     title: "CSS",
     postedAt: "2025/01/25",
     isFavorite: true,
@@ -42,7 +41,7 @@ export const learningMaterials = [
   {
     id: 6,
     image:
-      "https://i.pinimg.com/736x/74/f4/b2/74f4b2fe5a9d18a8b1b43db588dc35a0.jpg",
+      "https://w7.pngwing.com/pngs/403/269/png-transparent-react-react-native-logos-brands-in-colors-icon-thumbnail.png",
     title: "ReactJS",
     postedAt: "2025/01/12",
     isFavorite: false,
@@ -68,5 +67,37 @@ export const learningMaterials = [
     title: "Keycloak",
     postedAt: "2024/02/24",
     isFavorite: false,
+  },
+  {
+    id: 10,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJl4fp0SkQbTPU5ZxVl6AKWYuKCwM0gIhNtQ&s",
+    title: "Docker",
+    postedAt: "2024/12/04",
+    isFavorite: false,
+  },
+  {
+    id: 11,
+    image:
+      "https://w7.pngwing.com/pngs/173/36/png-transparent-postgresql-logo-computer-software-database-open-source-s-text-head-snout.png",
+    title: "PostgreSQL",
+    postedAt: "2024/09/04",
+    isFavorite: true,
+  },
+  {
+    id: 12,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc4XOdTwDFjrNDoRbCH2vDqCNCKD9u8zVr_g&s",
+    title: "Vite",
+    postedAt: "2024/10/12",
+    isFavorite: false,
+  },
+  {
+    id: 13,
+    image:
+      "https://w7.pngwing.com/pngs/293/485/png-transparent-tailwind-css-hd-logo.png",
+    title: "TailwindCSS",
+    postedAt: "2025/06/22",
+    isFavorite: true,
   },
 ];

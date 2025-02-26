@@ -4,7 +4,6 @@ import {
   ChartSpline,
   FolderPlus,
   LayoutDashboard,
-  LogOut,
   Settings,
   UserRound,
 } from "lucide-react";

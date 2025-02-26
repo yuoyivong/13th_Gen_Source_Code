@@ -18,7 +18,7 @@ export default function DashboardComponent() {
             </div>
             <div>
               <p className="text-xl font-semibold">{d?.totalTasks}</p>
-              <p className="text-gray-300">{d?.label}</p>
+              <p className="text-gray-400">{d?.label}</p>
             </div>
           </div>
         ))}
