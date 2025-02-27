@@ -16,7 +16,7 @@ export default function TopNavbarComponent() {
         <input
           type="text"
           placeholder="Search assignment here"
-          className="w-full bg-white py-3 px-6 rounded-xl focus:outline-custom-sky-blue h-12"
+          className="w-full bg-white py-3 px-6 rounded-xl h-12 border-none focus:border-none focus:ring-0 focus:outline-custom-sky-blue"
         />
 
         {/* search button */}

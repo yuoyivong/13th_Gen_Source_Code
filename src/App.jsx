@@ -1,4 +1,5 @@
 import "./App.css";
+import AssignmentsComponent from "./components/AssignmentsComponent";
 import DashboardComponent from "./components/DashboardComponent";
 import LearningMaterialsComponent from "./components/LearningMaterialsComponent";
 import SidebarComponent from "./components/SidebarComponent";
@@ -19,8 +20,9 @@ function App() {
 
           {/* dashboard summary */}
           <div className="flex justify-between">
-            <div className="w-9/12 mt-5">
+            <div className="w-9/12 mt-5 space-y-5">
               <DashboardComponent />
+              <AssignmentsComponent />
             </div>
 
             <div className="w-3/12 pl-10 mt-5">
