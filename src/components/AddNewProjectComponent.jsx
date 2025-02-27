@@ -1,8 +1,7 @@
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function AddNewProjectComponent({ handleAddNewProject }) {
-  const [projects, setProjects] = useState([]);
   const [singleProject, setSingleProject] = useState({
     projectName: "",
     dueDate: "",
@@ -56,7 +55,8 @@ export default function AddNewProjectComponent({ handleAddNewProject }) {
         console.log(singleProject);
         setErrors({});
 
-        setProjects((prev) => [...prev, singleProject]);
+        handleAddNewProject(singleProject);
+        handleResetForm();
       }
     } catch (err) {
       console.log(err.message);
@@ -72,10 +72,6 @@ export default function AddNewProjectComponent({ handleAddNewProject }) {
       description: "",
     });
   };
-
-  useEffect(() => {
-    handleAddNewProject(projects);
-  }, [projects]);
 
   return (
     <div>

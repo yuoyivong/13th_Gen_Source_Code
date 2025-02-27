@@ -17,7 +17,7 @@ export const learningMaterials = [
   {
     id: 3,
     image:
-      "https://i.pinimg.com/736x/5f/00/ec/5f00ec6e90e1c6c7368638f3995d9000.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png",
     title: "JavaScript",
     postedAt: "2025/02/23",
     isFavorite: true,
@@ -41,7 +41,7 @@ export const learningMaterials = [
   {
     id: 6,
     image:
-      "https://w7.pngwing.com/pngs/403/269/png-transparent-react-react-native-logos-brands-in-colors-icon-thumbnail.png",
+      "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png",
     title: "ReactJS",
     postedAt: "2025/01/12",
     isFavorite: false,
@@ -79,7 +79,7 @@ export const learningMaterials = [
   {
     id: 11,
     image:
-      "https://w7.pngwing.com/pngs/173/36/png-transparent-postgresql-logo-computer-software-database-open-source-s-text-head-snout.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsC9Zl9jYsLYXA9lhxDCiJD0Y_PQakXzpzMA&s",
     title: "PostgreSQL",
     postedAt: "2024/09/04",
     isFavorite: true,
@@ -95,7 +95,7 @@ export const learningMaterials = [
   {
     id: 13,
     image:
-      "https://w7.pngwing.com/pngs/293/485/png-transparent-tailwind-css-hd-logo.png",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/2560px-Tailwind_CSS_Logo.svg.png",
     title: "TailwindCSS",
     postedAt: "2025/06/22",
     isFavorite: true,
