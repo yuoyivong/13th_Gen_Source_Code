@@ -1,7 +1,82 @@
 import { Plus } from "lucide-react";
-import React from "react";
+import { useEffect, useState } from "react";
 
-export default function AddNewProjectComponent() {
+export default function AddNewProjectComponent({ handleAddNewProject }) {
+  const [projects, setProjects] = useState([]);
+  const [singleProject, setSingleProject] = useState({
+    projectName: "",
+    dueDate: "",
+    progress: 0,
+    description: "",
+  });
+
+  //   handle error input form
+  const [errors, setErrors] = useState();
+
+  // function for getting value from input fields
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSingleProject((prev) => ({ ...prev, [name]: value }));
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  //   form validation
+  const handleFormValidation = () => {
+    const newErrors = {};
+    const currentDate = new Date();
+
+    // project name error
+    if (!singleProject?.projectName)
+      newErrors.projectNameError = "* Project name is required.";
+
+    //   due date error
+    if (!singleProject.dueDate) {
+      newErrors.dueDateError = "* Please choose the deadline of your project.";
+    } else if (new Date(singleProject.dueDate) < currentDate) {
+      newErrors.dueDateError =
+        "* Selected date cannot be lower than current date.";
+    }
+
+    // progress error
+    if (!singleProject.progress)
+      newErrors.progressError = "* Please select your project progress.";
+
+    return newErrors;
+  };
+
+  //   when user submits the form, pass that object to its parent
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    try {
+      const validateionErrors = handleFormValidation();
+      if (Object.keys(validateionErrors).length > 0) {
+        setErrors(validateionErrors);
+      } else {
+        console.log(singleProject);
+        setErrors({});
+
+        setProjects((prev) => [...prev, singleProject]);
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  //   reset form function
+  const handleResetForm = () => {
+    setSingleProject({
+      projectName: "",
+      dueDate: "",
+      progress: "",
+      description: "",
+    });
+  };
+
+  useEffect(() => {
+    handleAddNewProject(projects);
+  }, [projects]);
+
   return (
     <div>
       <button
@@ -29,6 +104,7 @@ export default function AddNewProjectComponent() {
                 type="button"
                 className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-toggle="crud-modal"
+                onClick={handleResetForm}
               >
                 <svg
                   className="w-3 h-3"
@@ -48,7 +124,9 @@ export default function AddNewProjectComponent() {
                 <span className="sr-only">Close modal</span>
               </button>
             </div>
-            <form className="p-4 md:p-5">
+
+            {/* form create project */}
+            <form className="p-4 md:p-5" onSubmit={handleFormSubmit}>
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="col-span-2">
                   <label
@@ -61,10 +139,22 @@ export default function AddNewProjectComponent() {
                     type="text"
                     name="projectName"
                     id="projectName"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    value={singleProject?.projectName}
+                    className={`${
+                      errors?.projectNameError
+                        ? "border border-red-500 focus:ring-red-600 focus:border-red-600"
+                        : "border border-gray-300 focus:ring-primary-600 focus:border-primary-600"
+                    } bg-gray-50 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`}
                     placeholder="Type Project Name"
-                    required
+                    onChange={handleInputChange}
                   />
+
+                  {/* if project name field is empty */}
+                  {errors?.projectNameError && (
+                    <p className="text-red-600 pt-1">
+                      {errors?.projectNameError}
+                    </p>
+                  )}
                 </div>
 
                 <div className="col-span-2">
@@ -78,9 +168,19 @@ export default function AddNewProjectComponent() {
                     type="date"
                     name="dueDate"
                     id="dueDate"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    required
+                    value={singleProject?.dueDate}
+                    className={`${
+                      errors?.dueDateError
+                        ? "border border-red-500 focus:ring-red-600 focus:border-red-600"
+                        : "border border-gray-300 focus:ring-primary-600 focus:border-primary-600"
+                    } bg-gray-50  text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`}
+                    onChange={handleInputChange}
                   />
+
+                  {/* if due date field is empty */}
+                  {errors?.dueDateError && (
+                    <p className="text-red-600 pt-1">{errors?.dueDateError}</p>
+                  )}
                 </div>
 
                 <div className="col-span-2">
@@ -92,7 +192,14 @@ export default function AddNewProjectComponent() {
                   </label>
                   <select
                     id="progress"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    name="progress"
+                    value={singleProject?.progress}
+                    className={`${
+                      errors?.progressError
+                        ? "border border-red-500 focus:ring-red-600 focus:border-red-600"
+                        : "border border-gray-300 focus:ring-primary-600 focus:border-primary-600"
+                    } bg-gray-50  text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`}
+                    onChange={handleInputChange}
                   >
                     <option defaultValue="">Select Progress</option>
                     <option value="100">100</option>
@@ -100,7 +207,13 @@ export default function AddNewProjectComponent() {
                     <option value="50">50</option>
                     <option value="25">25</option>
                   </select>
+
+                  {/* if progress field empty */}
+                  {errors?.progressError && (
+                    <p className="text-red-600 pt-1">{errors?.progressError}</p>
+                  )}
                 </div>
+
                 <div className="col-span-2">
                   <label
                     htmlFor="description"
@@ -110,9 +223,12 @@ export default function AddNewProjectComponent() {
                   </label>
                   <textarea
                     id="description"
+                    name="description"
                     rows="4"
+                    value={singleProject?.description}
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Write product description here"
+                    onChange={handleInputChange}
                   ></textarea>
                 </div>
               </div>

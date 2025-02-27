@@ -1,10 +1,13 @@
-import { ChevronDown } from "lucide-react";
-import React from "react";
-
-export default function FilterComponent() {
+// eslint-disable-next-line react/prop-types
+export default function FilterComponent({ handleSort }) {
   // prevent the page from reload
   const handleSubmit = (e) => {
     e.preventDefault();
+  };
+
+  // select onchange
+  const handleSelectChange = (e) => {
+    handleSort(e.target.value);
   };
 
   return (
@@ -19,6 +22,7 @@ export default function FilterComponent() {
           id="filterLearningMaterials"
           name="filterLearningMaterials"
           className="text-sm focus:ring-custom-sky-blue focus:border-custom-sky-blue block w-full p-4 focus:outline-none text-gray-400 border-none rounded-xl bg-light-gray"
+          onChange={handleSelectChange}
         >
           <option hidden value="">
             Sort By

@@ -1,7 +1,20 @@
 import { EllipsisVertical } from "lucide-react";
-import React from "react";
+import { useEffect, useState } from "react";
 
-export default function CardComponent() {
+export default function CardComponent({ projects }) {
+  console.log("projects in card : ", projects);
+
+  const [projectList, setProjectList] = useState(projects);
+
+  //   const handleAddProjectList = () => {
+  //     setProjectList(projects);
+  //   };
+
+  useEffect(() => {
+    // handleAddProjectList();
+    console.log("Projects : ", projectList);
+  }, [projects]);
+
   return (
     <div>
       <div className="max-w-sm p-6 bg-white rounded-2xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
