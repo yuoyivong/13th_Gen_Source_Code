@@ -24,8 +24,23 @@ export default function CardComponent() {
           <p>Progress</p>
           <p>100%</p>
         </div>
-        <div className="mb-5 w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+        <div className="relative mb-5 w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
           <div className="bg-custom-sky-blue h-2.5 rounded-full"></div>
+
+          <div
+            className="border-l-4 rounded-full border-l-custom-pink h-5 absolute -top-1 left-1/4"
+            title="25%"
+          ></div>
+
+          <div
+            className="border-l-4 rounded-full border-l-custom-yellow-500 h-5 absolute -top-1 left-2/4"
+            title="50%"
+          ></div>
+
+          <div
+            className="border-l-4 rounded-full border-l-custom-carrot h-5 absolute -top-1 left-3/4"
+            title="75%"
+          ></div>
         </div>
 
         {/* deadline */}

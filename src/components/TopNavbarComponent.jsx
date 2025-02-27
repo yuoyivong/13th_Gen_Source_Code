@@ -12,17 +12,17 @@ export default function TopNavbarComponent() {
     <div className="flex justify-between items-center">
       {/* search bar */}
       <form className="relative w-9/12 " onSubmit={handleSubmit}>
+        {/* search button */}
+        <button className="cursor-pointer">
+          <Search className="w-6 h-6 text-primary-text absolute top-3 left-4" />
+        </button>
+
         {/* search input */}
         <input
           type="text"
           placeholder="Search assignment here"
-          className="w-full bg-white py-3 px-6 rounded-xl h-12 border-none focus:border-none focus:ring-0 focus:outline-custom-sky-blue"
+          className="w-full bg-white py-3 pl-14 pr-5 rounded-xl h-12 border-none focus:border-none focus:ring-0 focus:outline-custom-sky-blue"
         />
-
-        {/* search button */}
-        <button className="cursor-pointer">
-          <Search className="w-6 h-6 text-primary-text absolute top-3 right-4" />
-        </button>
       </form>
 
       {/* notification bell */}

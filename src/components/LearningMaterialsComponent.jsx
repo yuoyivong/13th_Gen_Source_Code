@@ -4,7 +4,6 @@ import { Star } from "lucide-react";
 import FilterComponent from "./FilterComponent";
 
 export default function LearningMaterialsComponent() {
-  
   // format date
   const formattedDate = (date) => {
     const options = {
@@ -18,7 +17,7 @@ export default function LearningMaterialsComponent() {
   };
 
   return (
-    <div className="bg-white drop-shadow-lg rounded-2xl overflow-auto max-h-4/6 no-scrollbar">
+    <div className="bg-white drop-shadow-lg rounded-2xl overflow-auto max-h-5/6 no-scrollbar">
       {/* calling filter component */}
       <FilterComponent />
 

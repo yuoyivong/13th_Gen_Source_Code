@@ -62,42 +62,43 @@ export default function AddNewProjectComponent() {
                     name="projectName"
                     id="projectName"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Type product name"
-                    required=""
+                    placeholder="Type Project Name"
+                    required
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+
+                <div className="col-span-2">
                   <label
-                    htmlFor="price"
+                    htmlFor="dueDate"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Price
+                    Due Date
                   </label>
                   <input
-                    type="number"
-                    name="price"
-                    id="price"
+                    type="date"
+                    name="dueDate"
+                    id="dueDate"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="$2999"
-                    required=""
+                    required
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+
+                <div className="col-span-2">
                   <label
-                    htmlFor="category"
+                    htmlFor="progress"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Category
+                    Progress
                   </label>
                   <select
-                    id="category"
+                    id="progress"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   >
-                    <option defaultValue="">Select category</option>
-                    <option value="TV">TV/Monitors</option>
-                    <option value="PC">PC</option>
-                    <option value="GA">Gaming/Console</option>
-                    <option value="PH">Phones</option>
+                    <option defaultValue="">Select Progress</option>
+                    <option value="100">100</option>
+                    <option value="75">75</option>
+                    <option value="50">50</option>
+                    <option value="25">25</option>
                   </select>
                 </div>
                 <div className="col-span-2">
@@ -105,7 +106,7 @@ export default function AddNewProjectComponent() {
                     htmlFor="description"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Product Description
+                    Project Description
                   </label>
                   <textarea
                     id="description"
@@ -115,24 +116,14 @@ export default function AddNewProjectComponent() {
                   ></textarea>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                <svg
-                  className="me-1 -ms-1 w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div className="text-right">
+                <button
+                  type="submit"
+                  className="text-white inline-flex items-center bg-custom-sky-blue hover:bg-custom-sky-blue-500 focus:ring-4 focus:outline-none focus:ring-custom-sky-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-custom-sky-blue-500 dark:hover:bg-custom-sky-blue-500 dark:focus:ring-custom-sky-blue-500"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                Add new product
-              </button>
+                  Create
+                </button>
+              </div>
             </form>
           </div>
         </div>
