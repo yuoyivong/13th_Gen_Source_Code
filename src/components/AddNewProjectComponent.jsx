@@ -52,7 +52,6 @@ export default function AddNewProjectComponent({ handleAddNewProject }) {
       if (Object.keys(validateionErrors).length > 0) {
         setErrors(validateionErrors);
       } else {
-        console.log(singleProject);
         setErrors({});
 
         handleAddNewProject(singleProject);
@@ -129,7 +128,7 @@ export default function AddNewProjectComponent({ handleAddNewProject }) {
                     htmlFor="projectName"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Project Name
+                    Project Name <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
@@ -158,7 +157,7 @@ export default function AddNewProjectComponent({ handleAddNewProject }) {
                     htmlFor="dueDate"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Due Date
+                    Due Date <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="date"
@@ -184,7 +183,7 @@ export default function AddNewProjectComponent({ handleAddNewProject }) {
                     htmlFor="progress"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Progress
+                    Progress <span className="text-red-600">*</span>
                   </label>
                   <select
                     id="progress"

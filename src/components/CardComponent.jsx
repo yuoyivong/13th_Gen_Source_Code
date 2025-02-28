@@ -2,8 +2,7 @@ import { EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function CardComponent({ projects }) {
-  console.log("projects in card : ", projects);
-
+  // all projects
   const [projectList, setProjectList] = useState(projects);
 
   // format date to Jun 17, 2024
@@ -28,7 +27,6 @@ export default function CardComponent({ projects }) {
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) return "Due Today";
-    if (diffDays === 1) return "1 day left";
     if (diffDays === 1) return "1 day left";
     if (diffDays < 7) return `${diffDays} days left`;
     if (diffDays < 14) return "1 week left";
@@ -105,20 +103,23 @@ export default function CardComponent({ projects }) {
                   } h-2.5 rounded-full`}
                 ></div>
 
-                {/* <div
+                {/* <button
                   className="border-l-4 rounded-full border-l-custom-pink h-5 absolute -top-1 left-1/4"
                   title="25%"
-                ></div>
+                  onClick={() => handleChangeProgress(25)}
+                ></button>
 
-                <div
+                <button
                   className="border-l-4 rounded-full border-l-custom-yellow-500 h-5 absolute -top-1 left-2/4"
                   title="50%"
-                ></div>
+                  onClick={() => handleChangeProgress(50)}
+                ></button>
 
-                <div
+                <button
                   className="border-l-4 rounded-full border-l-custom-carrot h-5 absolute -top-1 left-3/4"
                   title="75%"
-                ></div> */}
+                  onClick={() => handleChangeProgress(75)}
+                ></button> */}
               </div>
 
               {/* deadline */}

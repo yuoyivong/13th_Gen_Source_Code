@@ -11,7 +11,6 @@ function App() {
 
   // get search value
   const handleSearchProject = (searchValue) => {
-    console.log(searchValue);
     setSearchProject(searchValue);
   };
 

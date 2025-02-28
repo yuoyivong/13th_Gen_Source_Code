@@ -46,11 +46,6 @@ export default function LearningMaterialsComponent() {
     }
   };
 
-  // useEffect(() => {
-  //   handleSort();
-  //   console.log(learningMaterials);
-  // }, [sortLearningMaterialsBy]);
-
   return (
     <div className="bg-white drop-shadow-lg rounded-2xl overflow-auto max-h-5/6 no-scrollbar">
       {/* calling filter component */}

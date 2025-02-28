@@ -9,19 +9,19 @@ export default function AssignmentsComponent({ searchProject }) {
   // state to store filter projects
   const [filterProjects, setFilterProjects] = useState([]);
 
-  // const handleAddNewProject = (newProject) => {
-  //   setAllProjects((prev) => [...prev, newProject]);
-  //   setFilterProjects((prev) => [...prev, newProject]);
-  // };
+  const handleAddNewProject = (newProject) => {
+    setAllProjects((prev) => [...prev, newProject]);
+    setFilterProjects((prev) => [...prev, newProject]);
+  };
 
   // Add a new project
-  const handleAddNewProject = (newProject) => {
-    setAllProjects((prev) => {
-      const updatedProjects = [...prev, newProject];
-      setFilterProjects(updatedProjects); // Sync filtered projects
-      return updatedProjects;
-    });
-  };
+  // const handleAddNewProject = (newProject) => {
+  //   setAllProjects((prev) => {
+  //     const updatedProjects = [...prev, newProject];
+  //     setFilterProjects(updatedProjects); // Sync filtered projects
+  //     return updatedProjects;
+  //   });
+  // };
 
   const handleSearchProjectName = () => {
     if (!searchProject) {
@@ -39,8 +39,6 @@ export default function AssignmentsComponent({ searchProject }) {
   };
 
   useEffect(() => {
-    console.log(searchProject);
-
     handleSearchProjectName();
   }, [searchProject]);
 

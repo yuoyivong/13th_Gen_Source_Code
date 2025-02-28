@@ -1,19 +1,15 @@
 import { Bell, Search } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 export default function TopNavbarComponent({ handleSearchProject }) {
-  const [searchVal, setSearchVal] = useState("");
-
   const handleSearch = (e) => {
-    setSearchVal(e.target.value);
+    handleSearchProject(e.target.value);
   };
 
   // handle on form submit
   const handleSubmit = (e) => {
     // to prevent the page from reload
     e.preventDefault();
-    if (searchVal === "") return "";
-    handleSearchProject(searchVal);
   };
 
   return (
