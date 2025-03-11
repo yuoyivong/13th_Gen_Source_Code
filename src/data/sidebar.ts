@@ -4,10 +4,9 @@ import {
   Book,
   Camera,
   Code,
-  Cup,
   Edit,
-  Game,
-  Happyemoji,
+  EmojiHappy,
+  Home2,
   Music,
   Video,
   Weight,
@@ -16,30 +15,31 @@ import {
 export const sidebarList: Sidebar[] = [
   {
     id: 1,
+    icon: Home2,
+    label: "Home",
+    href: "/",
+  },
+  {
+    id: 2,
     icon: Book,
     label: "Book Categories",
     href: "/book-categories",
   },
   {
-    id: 2,
-    icon: Happyemoji,
-    label: "Old-School Cartoons",
+    id: 3,
+    icon: EmojiHappy,
+    label: "Old School Cartoons",
     href: "/old-school-cartoons",
   },
   {
-    id: 3,
+    id: 4,
     icon: Video,
     label: "Movies & TV Shows",
   },
   {
-    id: 4,
+    id: 5,
     icon: Music,
     label: "Music",
-  },
-  {
-    id: 5,
-    icon: Game,
-    label: "Video Games",
   },
   {
     id: 6,
@@ -63,11 +63,6 @@ export const sidebarList: Sidebar[] = [
   },
   {
     id: 10,
-    icon: Cup,
-    label: "Collectibles & Figures",
-  },
-  {
-    id: 11,
     icon: Edit,
     label: "Writing & Journaling",
   },

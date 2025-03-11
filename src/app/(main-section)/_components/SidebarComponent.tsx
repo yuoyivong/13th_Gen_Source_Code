@@ -1,11 +1,16 @@
+"use client";
 import { sidebarList } from "@/data/sidebar";
 import { Setting2 } from "iconsax-react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function SidebarComponent() {
+  const pathname = usePathname();
+
   return (
-    <aside className="sticky top-0 h-screen bg-white w-full flex flex-col items-center space-y-7 py-5">
+    <aside className="sticky top-0 h-screen bg-white w-full flex flex-col items-center space-y-8 py-5">
       {/* user profile */}
       <div className="flex flex-col items-center">
         <Image
@@ -26,18 +31,20 @@ export default function SidebarComponent() {
       {/* sidebar list */}
       <div className="w-10/12">
         {sidebarList?.map((sidebar) => (
-          <div
-            key={sidebar?.id}
-            className="py-2.5 px-8 hover:rounded-xl hover:bg-gray-100 "
-          >
-            <p
+          <div key={sidebar?.id} className="hover:rounded-xl hover:bg-gray-100">
+            <Link
+              href={sidebar?.href ? sidebar?.href : ""}
               className={`${
-                sidebar?.href ? "cursor-pointer" : ""
-              } flex gap-3 items-start`}
+                sidebar?.href
+                  ? "cursor-pointer hover:font-medium"
+                  : "cursor-default"
+              } ${
+                sidebar?.href === pathname && "bg-light-blue/40 rounded-xl"
+              } flex gap-3 items-start py-2.5 px-8 `}
             >
-              <sidebar.icon size={24} color="#C81D25" />
+              <sidebar.icon size={22} color="#C81D25" />
               <span className="text-lg">{sidebar?.label}</span>
-            </p>
+            </Link>
           </div>
         ))}
       </div>

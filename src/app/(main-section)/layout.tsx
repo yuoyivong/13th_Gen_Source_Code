@@ -3,6 +3,7 @@ import { Geist, Rubik } from "next/font/google";
 import "../globals.css";
 import SidebarComponent from "@/app/(main-section)/_components/SidebarComponent";
 import SearchComponent from "./_components/SearchComponent";
+import HeaderComponent from "./_components/HeaderComponent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,10 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js App Router",
+  title: {
+    template: "%s | Monster",
+    default: "Homework005 | Monster",
+  },
   description: "Homework 005",
 };
 
@@ -36,8 +40,9 @@ export default function RootLayout({
           {/* main content */}
           <div className="w-4/5 mt-8 space-y-6 px-16">
             <SearchComponent />
-            <div className="bg-white p-12 rounded-t-[50px] h-screen">
-              {children}
+            <div className="bg-white p-12 rounded-t-[50px] h-auto">
+              <HeaderComponent />
+              <div>{children}</div>
             </div>
           </div>
         </div>
