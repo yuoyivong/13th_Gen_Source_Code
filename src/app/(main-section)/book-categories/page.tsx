@@ -8,9 +8,14 @@ export const metadata: Metadata = {
   title: "Book Categories",
 };
 
-export default async function BookCategoriesPage() {
-  const bookList = await getAllBooks();
-  console.log(bookList);
+export default async function BookCategoriesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ query: string, search : string }>;
+}) {
+  const { query, search } = await searchParams;
+  const bookList = await getAllBooks(query, search);
+  
 
   return (
     <div className="grid grid-cols-2 pt-40 mx-auto w-full place-items-center">

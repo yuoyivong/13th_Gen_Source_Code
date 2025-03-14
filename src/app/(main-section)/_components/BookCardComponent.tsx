@@ -11,7 +11,7 @@ export default function BookCardComponent({ book }: { book: Book }) {
         <div className="w-45 h-62 relative -top-34">
           <Image
             src={book?.image}
-            alt="book cover"
+            alt={book?.book_title}
             fill
             className="rounded-2xl drop-shadow-lg"
           />
@@ -22,6 +22,7 @@ export default function BookCardComponent({ book }: { book: Book }) {
           href={{
             pathname: `/read-full-article/${book?.id}`,
             query: {
+              type: "book",
               name: "book categories",
               title: book?.book_title,
             },

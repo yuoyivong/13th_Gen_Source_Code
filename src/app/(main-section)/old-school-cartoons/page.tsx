@@ -1,15 +1,29 @@
 import React from "react";
 import CartoonCardComponent from "../_components/CartoonCardComponent";
 import type { Metadata } from "next";
+import { getAllCartoon } from "@/services/cartoon.service";
+import { APIResponse, Cartoon } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Old School Cartoons",
 };
 
-export default function OldSchoolCartoonPage() {
+export default async function OldSchoolCartoonPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ genre: string, search : string }>;
+}) {
+  const { genre, search } = await searchParams;
+  const cartoonList = (await getAllCartoon(genre, search)) as APIResponse<Cartoon[]>;
+  
+
   return (
-    <div>
-      <CartoonCardComponent />
+    <div className="grid grid-cols-3 place-items-center mt-10">
+      {cartoonList?.payload?.map((cartoon) => (
+        <div key={cartoon?.id}>
+          <CartoonCardComponent cartoon={cartoon} />
+        </div>
+      ))}
     </div>
   );
 }
