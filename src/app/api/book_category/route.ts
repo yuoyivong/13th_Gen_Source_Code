@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // get all book category
 export const GET = async () => {
@@ -11,7 +11,6 @@ export const GET = async () => {
     payload: categories,
   });
 };
-
 
 // get category name
 // export const GET = async(request : NextRequest ) => {

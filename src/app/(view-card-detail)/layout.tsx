@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Rubik } from "next/font/google";
 import "../globals.css";
 import Breadcrumb from "./_components/Breadcrumb";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,9 @@ export default function ViewCardDetailLayout({
         className={`${rubik.className} ${geistSans.variable} antialiased bg-ghost-white`}
       >
         <div className="container mx-auto mt-18 text-dark-blue">
-          <Breadcrumb />
+          <Suspense fallback={<p>Loading ...</p>}>
+            <Breadcrumb />
+          </Suspense>
           {children}
         </div>
       </body>

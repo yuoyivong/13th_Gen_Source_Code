@@ -34,7 +34,7 @@ export default function SearchComponent() {
     if (searchParams?.get("search")) {
       setSearch(searchParams?.get("search") || "");
     }
-  }, []);
+  }, [searchParams]);
 
   return (
     <Form onSubmit={handleSubmit} action="">

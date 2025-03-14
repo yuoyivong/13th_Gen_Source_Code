@@ -39,7 +39,9 @@ export default async function Page({
       {/* cover image */}
       <div className="flex justify-end relative">
         <Image
-          src={book ? book?.payload?.image! : cartoon?.payload?.image!}
+          src={
+            book ? book?.payload?.image || "" : cartoon?.payload?.image || ""
+          }
           alt="cover"
           width={300}
           height={350}
@@ -68,7 +70,9 @@ export default async function Page({
                 <span>{cartoon?.payload?.view_count}</span> times
               </p>{" "}
               <p> | </p>
-              <p>{formatDate(cartoon?.payload?.published_year!)}</p>
+              <p>
+                {formatDate(cartoon?.payload?.published_year || new Date())}
+              </p>
             </div>
           )}
         </div>

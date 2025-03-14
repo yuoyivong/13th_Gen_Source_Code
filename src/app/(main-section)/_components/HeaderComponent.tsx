@@ -14,20 +14,22 @@ export default function HeaderComponent() {
   const [genre, setGenre] = useState<APIResponse<Genre>>();
   const [category, setCategory] = useState<APIResponse<BookCategory>>();
 
-  const fetchGenreName = async () => {
-    const res = await getGenreNameByGenreId(searchParams?.get("genre")!);
-    setGenre(res);
-  };
-
-  const fetchCategoryName = async () => {
-    const res = await getCategoryNameByCategoryId(searchParams?.get("query")!);
-    setCategory(res);
-  };
-
   useEffect(() => {
+    const fetchGenreName = async () => {
+      const res = await getGenreNameByGenreId(searchParams?.get("genre") || "");
+      setGenre(res);
+    };
+
+    const fetchCategoryName = async () => {
+      const res = await getCategoryNameByCategoryId(
+        searchParams?.get("query") || ""
+      );
+      setCategory(res);
+    };
+
     fetchGenreName();
     fetchCategoryName();
-  }, [searchParams?.get("genre") || searchParams?.get("query")]);
+  }, [searchParams]);
 
   return (
     <div>

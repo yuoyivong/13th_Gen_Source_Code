@@ -27,45 +27,45 @@ export default function FilterComponent() {
 
   const [genreList, setGenreList] = useState<APIResponse<Genre[]>>();
 
-  // function to update url search params
-  const handleFilterCategory = () => {
-    const params = new URLSearchParams(searchParams?.toString());
-    if (selectedCategory) {
-      if (pathname === "/book-categories") {
-        params.set("query", selectedCategory);
-      } else if (pathname === "/old-school-cartoons") {
-        params.set("genre", selectedCategory);
-      } else {
-        params.delete("query");
-        params.delete("genre");
+  useEffect(() => {
+    // function to update url search params
+    const handleFilterCategory = () => {
+      const params = new URLSearchParams(searchParams?.toString());
+      if (selectedCategory) {
+        if (pathname === "/book-categories") {
+          params.set("query", selectedCategory);
+        } else if (pathname === "/old-school-cartoons") {
+          params.set("genre", selectedCategory);
+        } else {
+          params.delete("query");
+          params.delete("genre");
+        }
       }
-    }
-    router.push(`?${params?.toString()}`);
-  };
+      router.push(`?${params?.toString()}`);
+    };
 
-  // fetch book category
-  const fetchBookCategory = async () => {
-    const categories = await getAllBookCategory(
-      searchParams?.get("query") || ""
-    );
-
-    setCategoryList(categories);
-  };
-
-  // fetch get all genre
-  const fetchCartoonGenres = async () => {
-    const genres = await getAllGenres();
-    setGenreList(genres);
-  };
-
-  useEffect(() => {
     handleFilterCategory();
-  }, [selectedCategory]);
+  }, [selectedCategory, router, searchParams, pathname]);
 
   useEffect(() => {
+    // fetch book category
+    const fetchBookCategory = async () => {
+      const categories = await getAllBookCategory(
+        searchParams?.get("query") || ""
+      );
+
+      setCategoryList(categories);
+    };
+
+    // fetch get all genre
+    const fetchCartoonGenres = async () => {
+      const genres = await getAllGenres();
+      setGenreList(genres);
+    };
+
     fetchBookCategory();
     fetchCartoonGenres();
-  }, []);
+  }, [searchParams]);
 
   // Reset selected category when pathname changes
   useEffect(() => {
