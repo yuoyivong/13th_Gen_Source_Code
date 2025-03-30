@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: todo-web-mini-project-002
+  datasource:
+    url: jdbc:postgresql://localhost:5434/todo_db
+    username: postgres
+    password: 123
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8084
+
+# define secret key - jwt token
+jwt:
+  secret: "NjZiMzIyNjI2NGUwNTg4NTc3Y2RmNzUwODM3NjFlYjg5MzU1OTc1ZjkyMDk1Yjk3NTg5ZWQzY2Y2YTRjZTY4MQ=="
