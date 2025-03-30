@@ -17,6 +17,7 @@ import java.util.UUID;
 public class WorkspaceResponse {
     private UUID workspaceId;
     private String workspaceName;
+    private Boolean isFavorite;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Task> taskList;

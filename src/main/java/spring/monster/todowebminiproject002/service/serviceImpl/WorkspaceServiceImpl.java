@@ -33,24 +33,23 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public List<WorkspaceResponse> getAllWorkspaces(int pageNo, int pageSize, String sortBy, String sortDirection) {
+    public List<Workspace> getAllWorkspaces(int pageNo, int pageSize, String sortBy, String sortDirection) {
         UUID userId = currentUserConfig.getCurrentUserId();
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        List<Workspace> workspaceList = workspaceRepository.findWorkspacesByUserId(userId, pageable);
 
-        return workspaceList.stream().map(Workspace::toResponseDTO).collect(Collectors.toList());
+        return workspaceRepository.findWorkspacesByUserId(userId, pageable);
     }
 
     @Override
-    public WorkspaceResponse getWorkspaceById(UUID workspaceId) {
+    public Workspace getWorkspaceById(UUID workspaceId) {
         UUID userId = currentUserConfig.getCurrentUserId();
-        return workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId).toResponseDTO();
+        return workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
     }
 
     @Override
-    public WorkspaceResponse createWorkspace(WorkspaceRequest workspaceRequest) {
+    public Workspace createWorkspace(WorkspaceRequest workspaceRequest) {
 //        get current user id
         UUID userId = currentUserConfig.getCurrenUser().getUserId();
         UserInfo userInfo = userInfoService.getUserById(userId);
@@ -58,13 +57,14 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         Workspace workspace = new Workspace();
         workspace.setWorkspaceName(workspaceRequest.getWorkspaceName());
         workspace.setUser(userInfo);
-        return workspaceRepository.save(workspace).toResponseDTO();
+        workspace.setIsFavorite(workspaceRequest.getIsFavorite());
+        return workspaceRepository.save(workspace);
     }
 
     @Override
     @Transactional
-    public WorkspaceResponse updateWorkspaceById(UUID workspaceId, WorkspaceRequest workspaceRequest) {
-        UUID userId = currentUserConfig.getCurrenUser().getUserId();
+    public Workspace updateWorkspaceById(UUID workspaceId, WorkspaceRequest workspaceRequest) {
+        UUID userId = currentUserConfig.getCurrentUserId();
 
         Workspace workspace = workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
 
@@ -72,13 +72,15 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         assert workspace != null;
         workspace.setWorkspaceName(workspaceRequest.getWorkspaceName());
 
-        return workspace.toResponseDTO();
+        return workspace;
     }
 
     @Override
     @Transactional
     public void deleteWorkspaceById(UUID workspaceId) {
-        UUID userId = currentUserConfig.getCurrenUser().getUserId();
+        UUID userId = currentUserConfig.getCurrentUserId();
         workspaceRepository.deleteWorkspaceByIdAndUserId(workspaceId, userId);
     }
+
+
 }

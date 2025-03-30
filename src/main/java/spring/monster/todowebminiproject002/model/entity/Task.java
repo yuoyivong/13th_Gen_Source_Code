@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spring.monster.todowebminiproject002.enumeration.Status;
 import spring.monster.todowebminiproject002.enumeration.Tag;
+import spring.monster.todowebminiproject002.model.dto.response.TaskResponse;
 
 import java.util.Date;
 import java.util.UUID;
@@ -34,18 +35,28 @@ public class Task {
     @Column(length = 30, nullable = false)
     private Status status;
 
-    @Column(name = "is_favorite", nullable = false)
-    private boolean isFavorite;
-
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private Date startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private Date endDate;
 
     @ManyToOne
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
+//    map task to dto
+    public TaskResponse toResponseDTO() {
+        TaskResponse task = new TaskResponse();
+        task.setTaskId(this.taskId);
+        task.setTaskTitle(this.taskTitle);
+        task.setTaskDetails(this.details);
+        task.setTag(this.tag);
+        task.setStatus(this.status);
+        task.setStartDate(this.startDate);
+        task.setEndDate(this.endDate);
+
+        return task;
+    }
 
 }

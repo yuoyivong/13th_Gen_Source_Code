@@ -34,4 +34,6 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, UUID> {
     """)
     void deleteWorkspaceByIdAndUserId(@Param("workspaceId") UUID workspaceId,
                                      @Param("userId") UUID userId);
+
+
 }

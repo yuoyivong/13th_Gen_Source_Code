@@ -26,6 +26,9 @@ public class Workspace {
     @Column(nullable = false, length = 50, name = "workspace_name")
     private String workspaceName;
 
+    @Column(nullable = false, name = "is_favorite")
+    private Boolean isFavorite;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserInfo user;
@@ -39,6 +42,7 @@ public class Workspace {
         WorkspaceResponse workspaceResponse = new WorkspaceResponse();
         workspaceResponse.setWorkspaceId(this.workspaceId);
         workspaceResponse.setWorkspaceName(this.workspaceName);
+        workspaceResponse.setIsFavorite(this.isFavorite);
 
         return workspaceResponse;
 

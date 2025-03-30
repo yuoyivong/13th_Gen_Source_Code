@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import spring.monster.todowebminiproject002.model.dto.request.WorkspaceRequest;
 import spring.monster.todowebminiproject002.model.dto.response.APIResponse;
 import spring.monster.todowebminiproject002.model.dto.response.WorkspaceResponse;
+import spring.monster.todowebminiproject002.model.entity.Workspace;
 import spring.monster.todowebminiproject002.service.WorkspaceService;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -33,7 +35,7 @@ public class WorkspaceController {
         APIResponse<WorkspaceResponse> response = new APIResponse<>(
                 "Create new workspace successfully!",
                 HttpStatus.CREATED,
-                workspaceService.createWorkspace(workspaceRequest)
+                workspaceService.createWorkspace(workspaceRequest).toResponseDTO()
         );
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -47,10 +49,13 @@ public class WorkspaceController {
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "workspaceId") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortDirection) {
+        List<WorkspaceResponse> workspaceList =
+                workspaceService.getAllWorkspaces(pageNo, pageSize, sortBy, sortDirection)
+                        .stream().map(Workspace::toResponseDTO).collect(Collectors.toList());
         APIResponse<List<WorkspaceResponse>> response = new APIResponse<>(
                 "Get all workspaces successfully!",
                 HttpStatus.OK,
-                workspaceService.getAllWorkspaces(pageNo, pageSize, sortBy, sortDirection)
+                workspaceList
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -63,7 +68,7 @@ public class WorkspaceController {
         APIResponse<WorkspaceResponse> response = new APIResponse<>(
                 "Get workspace with id " + workspaceId + " successfully",
                 HttpStatus.OK,
-                workspaceService.getWorkspaceById(workspaceId)
+                workspaceService.getWorkspaceById(workspaceId).toResponseDTO()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -76,7 +81,7 @@ public class WorkspaceController {
         APIResponse<WorkspaceResponse> response = new APIResponse<>(
                 "Update workspace with id " + workspaceId + " successfully!",
                 HttpStatus.OK,
-                workspaceService.updateWorkspaceById(workspaceId, workspaceRequest)
+                workspaceService.updateWorkspaceById(workspaceId, workspaceRequest).toResponseDTO()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);

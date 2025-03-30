@@ -2,7 +2,7 @@ spring:
   application:
     name: todo-web-mini-project-002
   datasource:
-    url: jdbc:postgresql://localhost:5434/todo_db
+    url: jdbc:postgresql://localhost:5432/todo_db
     username: postgres
     password: 123
   jpa:

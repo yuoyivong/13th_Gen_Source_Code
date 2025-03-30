@@ -11,4 +11,5 @@ import lombok.Setter;
 @Setter
 public class WorkspaceRequest {
     private String workspaceName;
+    private Boolean isFavorite;
 }
