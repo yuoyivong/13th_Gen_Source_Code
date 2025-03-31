@@ -20,6 +20,7 @@ public class UserInfoDetails implements UserDetails {
         user.setUserId(userInfo.getUserId());
         user.setUsername(userInfo.getUsername());
         user.setEmail(userInfo.getEmail());
+        user.setProfile(userInfo.getProfile());
         return user;
     }
 

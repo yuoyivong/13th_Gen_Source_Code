@@ -23,8 +23,6 @@ public class TaskResponse {
     private Tag tag;
     private Status status;
     private Date startDate;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Date endDate;
 
 }

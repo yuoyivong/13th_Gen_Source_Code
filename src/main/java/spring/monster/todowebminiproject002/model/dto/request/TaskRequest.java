@@ -18,5 +18,6 @@ public class TaskRequest {
     private String taskTitle;
     private String taskDetails;
     private Tag tag;
+    private Date endDate;
 
 }

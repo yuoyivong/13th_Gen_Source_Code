@@ -10,7 +10,6 @@ import spring.monster.todowebminiproject002.enumeration.Status;
 import spring.monster.todowebminiproject002.exception.ResourceNotFoundException;
 import spring.monster.todowebminiproject002.exception.ValidationException;
 import spring.monster.todowebminiproject002.model.dto.request.TaskRequest;
-import spring.monster.todowebminiproject002.model.dto.response.TaskResponse;
 import spring.monster.todowebminiproject002.model.entity.Task;
 import spring.monster.todowebminiproject002.model.entity.Workspace;
 import spring.monster.todowebminiproject002.repository.TaskRepository;
@@ -64,6 +63,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTag(taskRequest.getTag());
         task.setStatus(Status.NOT_STARTED);
         task.setStartDate(new Date());
+        task.setEndDate(taskRequest.getEndDate());
         task.setWorkspace(workspace);
 
         return taskRepository.save(task);
@@ -83,7 +83,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTaskTitle(taskRequest.getTaskTitle());
         task.setDetails(taskRequest.getTaskDetails());
         task.setTag(taskRequest.getTag());
-        task.setEndDate(new Date());
+        task.setEndDate(taskRequest.getEndDate());
 
         return task;
     }
