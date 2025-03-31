@@ -41,6 +41,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUsername(userInfoRequest.getUsername());
         userInfo.setEmail(userInfoRequest.getEmail());
         userInfo.setPassword(passwordEncoder.encode(userInfoRequest.getPassword()));
+        userInfo.setProfile("https://i.pinimg.com/736x/25/c0/51/25c051740b4ef174b604799fb435db8e.jpg");
         return userInfoRepository.save(userInfo).toResponseDTO();
     }
 
@@ -48,7 +49,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfo getUserById(UUID userId) {
         return userInfoRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found " + userId));
     }
-
 
     //    custom method for handling validation
     private void validateUser(UserInfoRequest userInfoRequest) {

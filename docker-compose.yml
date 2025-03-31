@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  todo-mini-project-api:
+    image: 'todo-mini-project-api-image:latest'
+    build:
+      context : .
+    container_name: todo-mini-project-api-container
+    depends_on:
+      - todo-mini-project-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://todo-mini-project-db:5432/todo_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1231
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+    ports:
+      - "8080:8084"
+
+  todo-mini-project-db:
+    image: postgres:latest
+    container_name: todo-mini-project-container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1231
+      POSTGRES_DB: todo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
