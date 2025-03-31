@@ -23,4 +23,7 @@ public interface WorkspaceService {
     //    delete workspace by id
     void deleteWorkspaceById(UUID workspaceId);
 
+//    update workspace favorite status
+    Workspace updateWorkspaceFavorite(UUID workspaceId, boolean isFavorite);
+
 }

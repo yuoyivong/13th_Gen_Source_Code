@@ -1,14 +1,15 @@
 package spring.monster.todowebminiproject002.service.serviceImpl;
 
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import spring.monster.todowebminiproject002.configuration.CurrentUserConfig;
+import spring.monster.todowebminiproject002.exception.ResourceNotFoundException;
+import spring.monster.todowebminiproject002.exception.ValidationException;
 import spring.monster.todowebminiproject002.model.dto.request.WorkspaceRequest;
-import spring.monster.todowebminiproject002.model.dto.response.WorkspaceResponse;
 import spring.monster.todowebminiproject002.model.entity.UserInfo;
 import spring.monster.todowebminiproject002.model.entity.Workspace;
 import spring.monster.todowebminiproject002.repository.WorkspaceRepository;
@@ -17,7 +18,6 @@ import spring.monster.todowebminiproject002.service.WorkspaceService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkspaceServiceImpl implements WorkspaceService {
@@ -45,19 +45,26 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public Workspace getWorkspaceById(UUID workspaceId) {
         UUID userId = currentUserConfig.getCurrentUserId();
-        return workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
+        Workspace workspace = workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
+
+//        check if workspace exist or not
+        validateWorkspace(workspace);
+
+        return workspace;
     }
 
     @Override
     public Workspace createWorkspace(WorkspaceRequest workspaceRequest) {
 //        get current user id
-        UUID userId = currentUserConfig.getCurrenUser().getUserId();
+        UUID userId = currentUserConfig.getCurrentUserId();
         UserInfo userInfo = userInfoService.getUserById(userId);
+
+        validateWorkspaceField(workspaceRequest);
 
         Workspace workspace = new Workspace();
         workspace.setWorkspaceName(workspaceRequest.getWorkspaceName());
         workspace.setUser(userInfo);
-        workspace.setIsFavorite(workspaceRequest.getIsFavorite());
+        workspace.setIsFavorite(false);
         return workspaceRepository.save(workspace);
     }
 
@@ -68,8 +75,10 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
         Workspace workspace = workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
 
+        validateWorkspace(workspace);
+        validateWorkspaceField(workspaceRequest);
+
 //        update field
-        assert workspace != null;
         workspace.setWorkspaceName(workspaceRequest.getWorkspaceName());
 
         return workspace;
@@ -79,8 +88,38 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Transactional
     public void deleteWorkspaceById(UUID workspaceId) {
         UUID userId = currentUserConfig.getCurrentUserId();
+
+        Workspace workspace = workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
+
+        validateWorkspace(workspace);
+
         workspaceRepository.deleteWorkspaceByIdAndUserId(workspaceId, userId);
     }
 
+    @Override
+    @Transactional
+    public Workspace updateWorkspaceFavorite(UUID workspaceId, boolean isFavorite) {
+        UUID userId = currentUserConfig.getCurrentUserId();
+        Workspace workspace = workspaceRepository.findWorkspaceByUserIdAndWorkspaceId(userId, workspaceId);
+
+        validateWorkspace(workspace);
+
+        workspace.setIsFavorite(isFavorite);
+        return workspace;
+    }
+
+//    validate if workspace is not found
+    private void validateWorkspace(Workspace workspace) {
+        if(workspace == null) {
+            throw new ResourceNotFoundException("Workspace not found");
+        }
+    }
+
+//    check available workspace and field
+    private void validateWorkspaceField(WorkspaceRequest workspaceRequest) {
+        if(!StringUtils.hasText(workspaceRequest.getWorkspaceName())) {
+            throw new ValidationException("Workspace name cannot be empty.");
+        }
+    }
 
 }

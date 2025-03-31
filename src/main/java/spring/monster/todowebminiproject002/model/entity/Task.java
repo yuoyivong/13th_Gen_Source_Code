@@ -29,7 +29,7 @@ public class Task {
 
     private String details;
 
-    @Column(length = 60)
+    @Column(length = 60, nullable = false)
     private Tag tag;
 
     @Column(length = 30, nullable = false)

@@ -29,7 +29,8 @@ public class AuthenticationController {
 //    user register
     @PostMapping("/register")
     @Operation(summary = "New user register")
-    public ResponseEntity<APIResponse<UserInfoResponse>> register(@RequestBody UserInfoRequest userInfoRequest) {
+    public ResponseEntity<APIResponse<UserInfoResponse>> register(
+            @RequestBody UserInfoRequest userInfoRequest) {
         APIResponse<UserInfoResponse> response = new APIResponse<>(
                 "You've registered successfully.",
                 HttpStatus.CREATED,

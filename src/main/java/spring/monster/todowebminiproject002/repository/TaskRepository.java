@@ -16,7 +16,8 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("""
-    SELECT t FROM task t JOIN t.workspace w WHERE w.workspaceId = :workspaceId
+    SELECT t FROM task t JOIN t.workspace w 
+    WHERE w.workspaceId = :workspaceId
     """)
     List<Task> findTasksByWorkspaceId(@Param("workspaceId") UUID workspaceId, Pageable pageable);
 

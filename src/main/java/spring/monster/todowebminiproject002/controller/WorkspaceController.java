@@ -88,15 +88,29 @@ public class WorkspaceController {
     }
 
 //    delete workspace by id
-    @DeleteMapping("/workspace/{workspace-id}")
-    @Operation(summary = "Delete workspace by id")
-    public ResponseEntity<APIResponse<Void>> deleteWorkspace(@PathVariable("workspace-id") UUID workspaceId) {
-        workspaceService.deleteWorkspaceById(workspaceId);
+//    @DeleteMapping("/workspace/{workspace-id}")
+//    @Operation(summary = "Delete workspace by id")
+//    public ResponseEntity<APIResponse<Void>> deleteWorkspace(@PathVariable("workspace-id") UUID workspaceId) {
+//        workspaceService.deleteWorkspaceById(workspaceId);
+//
+//        APIResponse<Void> response = new APIResponse<>(
+//                "Delete workspace with id " + workspaceId + " successfully!",
+//                HttpStatus.OK,
+//                null
+//        );
+//
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 
-        APIResponse<Void> response = new APIResponse<>(
-                "Delete workspace with id " + workspaceId + " successfully!",
+//    update workspace favorite
+    @PatchMapping("/workspace/{workspace-id}/favorite")
+    @Operation(summary = "Update workspace favorite status")
+    public ResponseEntity<APIResponse<WorkspaceResponse>> updateFavoriteWorkspace(@PathVariable("workspace-id") UUID workspaceId,
+                                                                                  @RequestParam boolean favorite) {
+        APIResponse<WorkspaceResponse> response = new APIResponse<>(
+                "Workspace favorite status updated successfully!",
                 HttpStatus.OK,
-                null
+                workspaceService.updateWorkspaceFavorite(workspaceId, favorite).toResponseDTO()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);

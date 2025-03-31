@@ -1,5 +1,6 @@
 package spring.monster.todowebminiproject002.service;
 
+import spring.monster.todowebminiproject002.enumeration.Status;
 import spring.monster.todowebminiproject002.model.dto.request.TaskRequest;
 import spring.monster.todowebminiproject002.model.entity.Task;
 
@@ -22,4 +23,8 @@ public interface TaskService {
 
     //    delete task by id
     void deleteTaskById(UUID workspaceId, UUID taskId);
+
+    //    update task status progress
+    Task updateTaskStatus(UUID workspaceId, UUID taskId, Status status);
+
 }

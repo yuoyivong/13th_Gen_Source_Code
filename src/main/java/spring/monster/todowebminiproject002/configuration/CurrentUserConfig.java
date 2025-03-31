@@ -13,7 +13,7 @@ import java.util.UUID;
 public class CurrentUserConfig {
 
 //    get current user information
-    public UserInfoResponse getCurrenUser() {
+    public UserInfoResponse getCurrentUser() {
         Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
 
         UserInfoDetails userInfoDetails = (UserInfoDetails) authentication.getPrincipal();

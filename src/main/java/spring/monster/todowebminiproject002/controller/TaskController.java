@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import spring.monster.todowebminiproject002.enumeration.Status;
 import spring.monster.todowebminiproject002.model.dto.request.TaskRequest;
 import spring.monster.todowebminiproject002.model.dto.response.APIResponse;
 import spring.monster.todowebminiproject002.model.dto.response.TaskResponse;
@@ -111,4 +112,21 @@ public class TaskController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+//    update task status
+    @PatchMapping("/task/{task-id}/workspace/{workspace-id}/status")
+    @Operation(summary = "Update task status progress")
+    public ResponseEntity<APIResponse<TaskResponse>> updateTaskStatusById(
+            @PathVariable("task-id") UUID taskId,
+            @PathVariable("workspace-id") UUID workspaceId,
+            @RequestParam Status status
+            ) {
+
+        APIResponse<TaskResponse> response = new APIResponse<>(
+                "Task status updated successfully!",
+                HttpStatus.OK,
+                taskService.updateTaskStatus(workspaceId, taskId, status).toResponseDTO()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

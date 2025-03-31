@@ -28,7 +28,7 @@ public class UserController {
         APIResponse<UserInfoResponse> response = new APIResponse<>(
                 "Get current user information successfully!",
                 HttpStatus.OK,
-                currentUserConfig.getCurrenUser()
+                currentUserConfig.getCurrentUser()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
