@@ -1,8 +1,12 @@
+import { APIResponse } from "@/interface/api-response";
+import { User } from "@/interface/user-type";
+import { getCurrentUser } from "@/services/user-service";
 import { Bell } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-export default function UserProfile() {
+export default async function UserProfile() {
+  const currentUser = (await getCurrentUser()) as APIResponse<User>;
   return (
     <div className="flex gap-5 items-center">
       <Bell size={24} />
@@ -19,8 +23,8 @@ export default function UserProfile() {
         />
 
         <div>
-          <p>Monster</p>
-          <p className="text-persian-green">monster@gmail.com</p>
+          <p className="capitalize">{currentUser?.payload?.username}</p>
+          <p className="text-persian-green">{currentUser?.payload?.email}</p>
         </div>
       </div>
     </div>

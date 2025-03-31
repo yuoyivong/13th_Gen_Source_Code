@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import { TokenUser } from "./interface/types";
 import { User } from "./interface/user-type";
 import Credentials from "next-auth/providers/credentials";
+import { loginService } from "./services/auth-service";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -12,16 +13,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
 
-      authorize: async (credentials: User) => {
+      authorize: async (credentials) => {
+        console.log("credentials", credentials);
+
         const user: User = {
           email: credentials?.email as string,
           password: credentials?.password as string,
         };
 
         // call login service
-        // const data = await loginService(user);
+        const data = await loginService(user);
 
-        return null;
+        return data.payload || null;
       },
     }),
   ],

@@ -91,7 +91,7 @@ export default function RegisterComponent() {
 
         <Input
           {...register("password")}
-          type="text"
+          type="password"
           placeholder="Please type your password"
           className={`${
             errors?.password

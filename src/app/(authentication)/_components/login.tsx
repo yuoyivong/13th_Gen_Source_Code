@@ -2,13 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { schema } from "@/schema/form-schema";
+import { loginSchema } from "@/schema/form-schema";
 import { User } from "@/interface/user-type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, Mail } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { loginAction } from "@/actions/login-action";
 
 export default function LoginComponent() {
   const {
@@ -17,14 +18,17 @@ export default function LoginComponent() {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(loginSchema),
   });
 
   //   handle form submit
-  const handleFormSubmit = (data: User) => {
+  const handleFormSubmit = async (data: User) => {
     console.log(data);
+    await loginAction(data);
+
     reset();
   };
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {/* email */}
@@ -63,7 +67,7 @@ export default function LoginComponent() {
 
         <Input
           {...register("password")}
-          type="text"
+          type="password"
           placeholder="Please type your password"
           className={`${
             errors?.password
@@ -80,7 +84,10 @@ export default function LoginComponent() {
       </div>
 
       {/* sign in button */}
-      <Button className="text-base cursor-pointer bg-persian-green text-white py-2.5 rounded-lg w-full font-bold">
+      <Button
+        type="submit"
+        className="text-base cursor-pointer bg-persian-green text-white py-2.5 rounded-lg w-full font-bold"
+      >
         Login
       </Button>
 
