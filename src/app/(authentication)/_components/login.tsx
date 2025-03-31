@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { schema } from "@/schema/form-schema";
-import { User } from "@/types/user-type";
+import { User } from "@/interface/user-type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, Mail } from "lucide-react";
 import Link from "next/link";
@@ -31,7 +31,7 @@ export default function LoginComponent() {
       <div>
         <Label
           htmlFor="email"
-          className="text-light-steel-blue flex gap-2 items-start mb-2"
+          className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
           <Mail size={20} /> Email
         </Label>
@@ -44,7 +44,7 @@ export default function LoginComponent() {
             errors?.email
               ? "focus:outline focus:outline-red-600 border border-red-600"
               : ""
-          } bg-ghost-white py-2.5 px-4 rounded-xl w-full text-light-steel-blue/90`}
+          } bg-ghost-white py-2.5 px-4 rounded-lg w-full text-light-steel-blue/90`}
         />
 
         {errors?.email && (
@@ -56,7 +56,7 @@ export default function LoginComponent() {
       <div>
         <Label
           htmlFor="password"
-          className="text-light-steel-blue flex gap-2 items-start mb-2"
+          className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
           <KeyRound size={20} /> Password
         </Label>
@@ -69,7 +69,7 @@ export default function LoginComponent() {
             errors?.password
               ? "focus:outline focus:outline-red-600 border border-red-600"
               : ""
-          } bg-ghost-white py-2.5 px-4 rounded-xl w-full text-light-steel-blue/90`}
+          } bg-ghost-white py-2.5 px-4 rounded-lg w-full text-light-steel-blue/90`}
         />
 
         {errors?.password && (
@@ -80,7 +80,7 @@ export default function LoginComponent() {
       </div>
 
       {/* sign in button */}
-      <Button className="cursor-pointer bg-persian-green text-white py-2.5 rounded-xl w-full font-bold">
+      <Button className="text-base cursor-pointer bg-persian-green text-white py-2.5 rounded-lg w-full font-bold">
         Login
       </Button>
 
@@ -99,8 +99,8 @@ export default function LoginComponent() {
       </div>
 
       {/* sign in with google */}
-      <div className=" bg-ghost-white p-2.5 rounded-xl text-center">
-        <Button className="flex gap-2 items-start justify-center w-full">
+      <div className=" bg-ghost-white rounded-lg text-center">
+        <Button className="flex gap-2 items-start justify-center w-full bg-ghost-white text-charcoal shadow-none hover:bg-ghost-white/50">
           <img src="/Google Icon.svg" alt="google icon" /> Login with google
         </Button>
       </div>

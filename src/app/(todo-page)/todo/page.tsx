@@ -5,7 +5,7 @@ import AddNewTaskPopup from "../_components/add-new-task";
 
 export default function TodoPage() {
   return (
-    <div className="px-10 py-5">
+    <div className="px-20 py-5">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">HRD Design</h1>
 
@@ -15,7 +15,7 @@ export default function TodoPage() {
       </div>
 
       {/* status header */}
-      <div className="grid grid-cols-3 mt-6 gap-44">
+      <div className="grid grid-cols-3 mt-6 gap-40">
         {/* not started */}
         <div className="col-span-1">
           <p className="text-lg capitalize text-watermelon-red pb-1 border-b border-b-watermelon-red ">
