@@ -13,7 +13,7 @@ export default function TodoHeader({
   console.log(q);
 
   return (
-    <div className="flex justify-between items-center border-b border-b-gray-300 pb-3 mb-6 px-20">
+    <div className="flex justify-between items-center border-b border-b-gray-300 pb-3 mb-6 px-20 z-50">
       <WorkspaceTodoHeader q={q} workspaceName={workspaceName} />
       <UserProfile />
     </div>

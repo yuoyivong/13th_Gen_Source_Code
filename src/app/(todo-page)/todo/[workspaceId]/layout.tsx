@@ -23,11 +23,13 @@ export default async function AuthenticationLayout({
   return (
     <html lang="en">
       <body className="text-charcoal bg-ghost-white w-full flex">
-        <div className="w-1/5 ">
-          <div className="m-16 text-center">
+        <div className="w-1/5">
+          <div className="m-16 text-center  sticky top-20 z-20">
             <Logo />
           </div>
-          <SidebarComponent workspaceId={(await params)?.workspaceId} />
+          <div className="sticky top-44">
+            <SidebarComponent workspaceId={(await params)?.workspaceId} />
+          </div>
         </div>
 
         <div className="w-4/5">{children}</div>

@@ -1,9 +1,7 @@
 import { APIResponse } from "@/interface/api-response";
 import { WorkspaceType } from "@/interface/workspace-type";
-import getRandomColorClass from "@/lib/generate-random-color";
 import { getAllWorkspaces } from "@/services/workspace-service";
 import React from "react";
-import Link from "next/link";
 import { LogoutCurve, More, Star1 } from "iconsax-react";
 import AddUpdateWorkspacePopup from "./add-update-workspace";
 import WorkspaceComponent from "./workspace";
