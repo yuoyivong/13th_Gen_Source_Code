@@ -16,4 +16,5 @@ export interface TaskRequst {
   taskTitle: string;
   taskDetails?: string;
   tag: Tag;
+  endDate: Date;
 }

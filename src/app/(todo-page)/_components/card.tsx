@@ -1,17 +1,18 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Status } from "@/enum/status";
 import { TaskType } from "@/interface/task-type";
 import formattedDate from "@/lib/format-date";
 import { Clock, Ellipsis } from "lucide-react";
 import React from "react";
+import SelectTaskStatus from "./select-task-status";
+import { WorkspaceType } from "@/interface/workspace-type";
 
-export default function CardComponent({ task }: { task: TaskType }) {
+export default function CardComponent({
+  task,
+  workspaceId,
+}: {
+  task: TaskType;
+  workspaceId: WorkspaceType["workspaceId"];
+}) {
   return (
     <div className="border border-gray-300 rounded-xl mt-8">
       <div className="p-5">
@@ -46,27 +47,14 @@ export default function CardComponent({ task }: { task: TaskType }) {
 
       {/* progress */}
       <div className="flex justify-between items-center border-t border-t-gray-300 p-5">
-        <Select>
-          <SelectTrigger
-            className={`w-36 truncate ${
-              task?.status === Status.NOT_STARTED
-                ? "border-watermelon-red text-watermelon-red "
-                : task?.status === Status.IN_PROGRESS
-                ? "border-royal-blue text-royal-blue "
-                : "border-persian-green text-persian-green "
-            }`}
-          >
-            <SelectValue placeholder={task?.status} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="NOT_STARTED">{Status.NOT_STARTED}</SelectItem>
-            <SelectItem value="IN_PROGRESS">{Status.IN_PROGRESS}</SelectItem>
-            <SelectItem value="FINISHED">{Status.FINISHED}</SelectItem>
-          </SelectContent>
-        </Select>
+        <SelectTaskStatus
+          status={task?.status}
+          workspaceId={workspaceId}
+          taskId={task?.taskId}
+        />
 
         {/* date */}
-        <p className="flex gap-3 text-light-steel-blue">
+        <p className="flex gap-2 text-light-steel-blue">
           <Clock size={22} /> {formattedDate(task?.endDate || new Date())}
         </p>
       </div>

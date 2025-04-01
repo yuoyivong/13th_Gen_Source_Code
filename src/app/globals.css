@@ -13,10 +13,8 @@
 
   --ghost-white: #f8fafc;
   --charcoal: #1e293b;
-  
+
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -26,7 +24,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /* --muted-foreground: oklch(0.556 0 0); */
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -50,6 +48,7 @@
 
 @theme inline {
   --drop-shadow-light-steel-blue: 0 0 10px var(--light-steel-blue-10);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -83,7 +82,7 @@
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
+  /* --color-muted-foreground: var(--muted-foreground); */
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
@@ -104,7 +103,6 @@
   src: url("/fonts/sf-pro-display/SFPRODISPLAYREGULAR.OTF");
   font-weight: 400;
 }
-
 
 @font-face {
   font-family: "pro-display";
@@ -145,7 +143,7 @@ body {
 
   --muted: oklch(0.269 0 0);
 
-  --muted-foreground: oklch(0.708 0 0);
+  /* --muted-foreground: oklch(0.708 0 0); */
 
   --accent: oklch(0.269 0 0);
 

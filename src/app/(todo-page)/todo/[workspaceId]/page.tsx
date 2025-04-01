@@ -1,6 +1,5 @@
 import React from "react";
 import CardComponent from "../../_components/card";
-import AddNewTaskPopup from "../../_components/add-new-task";
 import { UUID } from "crypto";
 import { getWorkspaceById } from "@/services/workspace-service";
 import { WorkspaceType } from "@/interface/workspace-type";
@@ -10,6 +9,7 @@ import TodoHeader from "../../_components/todo-header";
 import { getAllTasks } from "@/services/task-service";
 import { TaskType } from "@/interface/task-type";
 import { Status } from "@/enum/status";
+import AddUpdateTaskPopup from "../../_components/add-update-task";
 
 export default async function TodoPage({
   params,
@@ -66,7 +66,7 @@ export default async function TodoPage({
             </p>
             {notStartedTasks.map((task) => (
               <div key={task?.taskId}>
-                <CardComponent task={task} />
+                <CardComponent task={task} workspaceId={workspaceId} />
               </div>
             ))}
           </div>
@@ -80,7 +80,7 @@ export default async function TodoPage({
             </p>
             {inProgressTasks.map((task) => (
               <div key={task?.taskId}>
-                <CardComponent task={task} />
+                <CardComponent task={task} workspaceId={workspaceId} />
               </div>
             ))}
           </div>
@@ -94,7 +94,7 @@ export default async function TodoPage({
             </p>
             {finishedTasks.map((task) => (
               <div key={task?.taskId}>
-                <CardComponent task={task} />
+                <CardComponent task={task} workspaceId={workspaceId} />
               </div>
             ))}
           </div>
@@ -103,7 +103,7 @@ export default async function TodoPage({
 
       {/* Add New Task Popup Button */}
       <div className="fixed bottom-10 right-10 flex gap-4 items-center">
-        <AddNewTaskPopup />
+        <AddUpdateTaskPopup workspaceId={workspaceId} />
 
         <div className="bg-white p-3 rounded-full">
           <img src="/4 dots.svg" alt="4 dots" />

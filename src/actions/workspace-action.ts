@@ -3,6 +3,7 @@
 import { WorkspaceType } from "@/interface/workspace-type";
 import {
   createNewWorkspace,
+  getWorkspaceById,
   updateWorkspace,
   updateWorkspaceFavoriteStatus,
 } from "@/services/workspace-service";
@@ -40,9 +41,18 @@ const updateWorkspaceFavoriteStatusAction = async (
   return updateFavoriteWorkspace;
 };
 
+// get workspace by id
+const getWorkspaceByIdAction = async (
+  workspaceId: WorkspaceType["workspaceId"]
+) => {
+  const workspace = await getWorkspaceById(workspaceId);
+  return workspace;
+};
+
 // expose methods
 export {
   createWorkspaceAction,
   updateWorkspaceAction,
   updateWorkspaceFavoriteStatusAction,
+  getWorkspaceByIdAction,
 };

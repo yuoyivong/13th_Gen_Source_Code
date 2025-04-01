@@ -3,12 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { schema } from "@/schema/form-schema";
-import { User } from "@/interface/user-type";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { KeyRound, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Key, Sms, User } from "iconsax-react";
 
 export default function RegisterComponent() {
   const {
@@ -21,7 +20,7 @@ export default function RegisterComponent() {
   });
 
   //   handle form submit
-  const handleFormSubmit = (data: User) => {
+  const handleFormSubmit = (data: any) => {
     console.log(data);
     reset();
   };
@@ -34,7 +33,7 @@ export default function RegisterComponent() {
           htmlFor="username"
           className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
-          <UserRound size={20} /> Username
+          <User size="20" color="#94A3B8" variant="Broken" /> Username
         </Label>
 
         <Input
@@ -61,7 +60,7 @@ export default function RegisterComponent() {
           htmlFor="email"
           className="text-light-steel-blue flex gap-2 items-start mb-2  text-base"
         >
-          <Mail size={20} /> Email
+          <Sms size="20" color="#94A3B8" variant="Broken" /> Email
         </Label>
 
         <Input
@@ -86,7 +85,7 @@ export default function RegisterComponent() {
           htmlFor="password"
           className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
-          <KeyRound size={20} /> Password
+          <Key size="20" color="#94A3B8" variant="Broken" /> Password
         </Label>
 
         <Input

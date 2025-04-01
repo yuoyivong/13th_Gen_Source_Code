@@ -22,7 +22,7 @@ export default function LoginComponent() {
   });
 
   //   handle form submit
-  const handleFormSubmit = async (data: User) => {
+  const handleFormSubmit = async (data: any) => {
     console.log(data);
     await loginAction(data);
 
