@@ -41,7 +41,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUsername(userInfoRequest.getUsername());
         userInfo.setEmail(userInfoRequest.getEmail());
         userInfo.setPassword(passwordEncoder.encode(userInfoRequest.getPassword()));
-        userInfo.setProfile("https://i.pinimg.com/736x/25/c0/51/25c051740b4ef174b604799fb435db8e.jpg");
+        userInfo.setProfile("https://i.pinimg.com/736x/35/f3/d7/35f3d744998a14c9b2f1ebd0146b384e.jpg");
         return userInfoRepository.save(userInfo).toResponseDTO();
     }
 

@@ -99,5 +99,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    // Handle InvalidEnumTypeException
+    @ExceptionHandler(InvalidEnumTypeException.class)
+    public ResponseEntity<Object> handleInvalidEnumTypeException(InvalidEnumTypeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                null
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
 }

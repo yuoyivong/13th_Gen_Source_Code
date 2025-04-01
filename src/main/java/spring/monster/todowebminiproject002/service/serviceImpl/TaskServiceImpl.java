@@ -7,6 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import spring.monster.todowebminiproject002.enumeration.Status;
+import spring.monster.todowebminiproject002.enumeration.Tag;
+import spring.monster.todowebminiproject002.exception.InvalidEnumTypeException;
 import spring.monster.todowebminiproject002.exception.ResourceNotFoundException;
 import spring.monster.todowebminiproject002.exception.ValidationException;
 import spring.monster.todowebminiproject002.model.dto.request.TaskRequest;
@@ -16,6 +18,7 @@ import spring.monster.todowebminiproject002.repository.TaskRepository;
 import spring.monster.todowebminiproject002.service.TaskService;
 import spring.monster.todowebminiproject002.service.WorkspaceService;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -128,14 +131,34 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-//   validate each task field
+    //   validate each task field
     private void validateTaskField(TaskRequest taskRequest) {
-        if(!StringUtils.hasText(taskRequest.getTaskTitle())) {
+        // Validate task title
+        if (!StringUtils.hasText(taskRequest.getTaskTitle())) {
             throw new ValidationException("Task title cannot be empty.");
         }
 
-        if(!StringUtils.hasText(String.valueOf(taskRequest.getTag()))) {
+        // Validate task tag - ensure it is not null or empty and is a valid enum value
+        String tag = String.valueOf(taskRequest.getTag()).trim();
+        if (!StringUtils.hasText(tag)) {
             throw new ValidationException("Task tag cannot be empty.");
         }
+
+        boolean isValid = Arrays.stream(Tag.values())
+                .anyMatch(e -> e.name().equalsIgnoreCase(tag));
+
+        if (!isValid) {
+            String allowedTags = Arrays.stream(Tag.values())
+                    .map(Enum::name)
+                    .collect(Collectors.joining(", "));
+
+            throw new InvalidEnumTypeException("Invalid tag: " + tag + ". Allowed values: " + allowedTags);
+        }
+
+        // Validate task end date
+        if (taskRequest.getEndDate() == null) {
+            throw new ValidationException("Task end date cannot be empty.");
+        }
     }
+
 }
