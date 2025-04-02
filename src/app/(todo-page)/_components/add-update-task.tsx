@@ -46,11 +46,11 @@ export default function AddUpdateTaskPopup({
 }: {
   workspaceId: WorkspaceType["workspaceId"];
   edit: boolean;
-  taskId: TaskType["taskId"];
+  taskId?: TaskType["taskId"];
 }) {
   const [date, setDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
-  const [workspace, setWorkspace] = useState<TaskType>();
+  const [task, setTask] = useState<TaskType>();
 
   const {
     register,
@@ -82,7 +82,7 @@ export default function AddUpdateTaskPopup({
     if (!edit) {
       await createNewTaskAction(workspaceId, data);
     } else {
-      await updateTaskAction(workspaceId, taskId, data);
+      if (taskId) await updateTaskAction(workspaceId, taskId, data);
     }
     resetForm(); // Call the function to reset everything
     setIsOpen(false);
@@ -157,7 +157,7 @@ export default function AddUpdateTaskPopup({
                 className={`${
                   errors?.taskTitle ? "border border-red-600" : ""
                 }`}
-                defaultValue={workspace?.}
+                // defaultValue={workspace?.}
               />
 
               {errors?.taskTitle && (

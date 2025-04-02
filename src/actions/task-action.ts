@@ -5,6 +5,7 @@ import { WorkspaceType } from "@/interface/workspace-type";
 import {
   createNewTask,
   deleteTaskById,
+  getTaskById,
   updateTask,
   updateTaskStatus,
 } from "@/services/task-service";
@@ -56,9 +57,10 @@ const deleteTaskAction = async (
 };
 
 // get task by id
-const getTaskById = async () => {
-  
-}
+const getTaskByIdAction = async (id: TaskType["taskId"]) => {
+  const task = await getTaskById(id);
+  return task;
+};
 
 // expose methods
 export {
@@ -66,4 +68,5 @@ export {
   createNewTaskAction,
   deleteTaskAction,
   updateTaskAction,
+  getTaskByIdAction,
 };
