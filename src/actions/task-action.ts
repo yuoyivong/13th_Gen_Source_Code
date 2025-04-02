@@ -57,8 +57,11 @@ const deleteTaskAction = async (
 };
 
 // get task by id
-const getTaskByIdAction = async (id: TaskType["taskId"]) => {
-  const task = await getTaskById(id);
+const getTaskByIdAction = async (
+  id: TaskType["taskId"],
+  workspaceId: WorkspaceType["workspaceId"]
+) => {
+  const task = await getTaskById(id, workspaceId);
   return task;
 };
 

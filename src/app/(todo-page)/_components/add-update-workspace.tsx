@@ -121,7 +121,7 @@ export default function AddUpdateWorkspacePopup({
               {...register("workspaceName", {
                 required: "* Workspace name cannot be empty.",
               })}
-              defaultValue={wName || "Hellfdaf"}
+              defaultValue={wName}
               type="text"
               id="workspaceName"
               placeholder="Please type your workspace name"

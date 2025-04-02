@@ -19,14 +19,21 @@ const getAllTasks = async (workspaceId: WorkspaceType["workspaceId"]) => {
 };
 
 // get task by id
-const getTaskById = async (id: TaskType["taskId"]) => {
+const getTaskById = async (
+  id: TaskType["taskId"],
+  workspaceId: WorkspaceType["workspaceId"]
+) => {
+  console.log("ID : ", id);
+
   const headers = await getRequestHeader();
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_AUTH_BASE_URL}/task/workspace/${id}`,
+    `${process.env.NEXT_PUBLIC_AUTH_BASE_URL}/task/${id}/workspace/${workspaceId}`,
     { headers }
   );
 
   const task = await response.json();
+  console.log("Get task by id : ", task);
+
   return task;
 };
 

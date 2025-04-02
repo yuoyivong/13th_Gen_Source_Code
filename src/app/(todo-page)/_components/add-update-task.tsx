@@ -1,5 +1,9 @@
 "use client";
-import { createNewTaskAction, updateTaskAction } from "@/actions/task-action";
+import {
+  createNewTaskAction,
+  getTaskByIdAction,
+  updateTaskAction,
+} from "@/actions/task-action";
 import { getWorkspaceByIdAction } from "@/actions/workspace-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -51,6 +55,7 @@ export default function AddUpdateTaskPopup({
   const [date, setDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
   const [task, setTask] = useState<TaskType>();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false); // New state for calendar
 
   const {
     register,
@@ -111,15 +116,32 @@ export default function AddUpdateTaskPopup({
   // fetch workspace by id
   useEffect(() => {
     const fetchWorkspace = async () => {
-      const workspaceById = (await getWorkspaceByIdAction(
-        workspaceId
-      )) as APIResponse<TaskType>;
-      setWorkspace(workspaceById?.payload);
+      const taskById = (
+        taskId ? await getTaskByIdAction(taskId, workspaceId) : null
+      ) as APIResponse<TaskType>;
+      if (taskById?.payload) {
+        const fetchedTask = taskById.payload;
+        setTask(fetchedTask);
+
+        // Set form values when task data is available
+        setValue("taskTitle", fetchedTask.taskTitle || "");
+        setValue("tag", fetchedTask.tag || "");
+        setValue("taskDetails", fetchedTask.taskDetails || "");
+
+        if (fetchedTask.endDate) {
+          const endDate = new Date(fetchedTask.endDate);
+          setDate(endDate);
+          setValue("endDate", endDate);
+        }
+      }
     };
 
     fetchWorkspace();
   }, [workspaceId]);
 
+  useEffect(() => {
+    console.log("task : ", task);
+  }, [task]);
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger asChild>
@@ -157,7 +179,6 @@ export default function AddUpdateTaskPopup({
                 className={`${
                   errors?.taskTitle ? "border border-red-600" : ""
                 }`}
-                // defaultValue={workspace?.}
               />
 
               {errors?.taskTitle && (
@@ -219,28 +240,51 @@ export default function AddUpdateTaskPopup({
               <Label htmlFor="endDate" className="mb-2">
                 End Date
               </Label>
-              <Popover {...register("endDate")}>
+              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                 <PopoverTrigger asChild>
                   <Button
+                    type="button" // Prevent form submission
                     variant={"outline"}
                     className={cn(
                       `${
                         errors?.endDate ? "border border-red-600" : ""
-                      } w-full col-span-3 justify-start text-left font-normal z-50 `,
+                      } w-full justify-start text-left font-normal`,
                       !date && "text-muted-foreground"
                     )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsCalendarOpen(true);
+                    }}
                   >
                     <Calendar2 size="20" color="#94a3b8" variant="Broken" />
                     {date ? format(date, "PPP") : <span>Pick a date</span>}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 z-50" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={handleDateChange} // Update the date in form
-                    initialFocus
-                  />
+                <PopoverContent
+                  className="w-auto p-0"
+                  align="start"
+                  onInteractOutside={(e) => {
+                    e.preventDefault();
+                    setIsCalendarOpen(false);
+                  }}
+                  onPointerDownOutside={(e) => {
+                    e.preventDefault();
+                    setIsCalendarOpen(false);
+                  }}
+                  style={{ zIndex: 9999 }}
+                >
+                  <div
+                    onClick={(e) => e.stopPropagation()} // Prevent clicks from closing
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={handleDateChange}
+                      initialFocus
+                      disabled={false}
+                    />
+                  </div>
                 </PopoverContent>
               </Popover>
 
@@ -264,7 +308,7 @@ export default function AddUpdateTaskPopup({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">{!edit ? "Create" : "Save changes"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
