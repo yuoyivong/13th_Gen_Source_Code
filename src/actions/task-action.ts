@@ -55,6 +55,11 @@ const deleteTaskAction = async (
   return deletedTask;
 };
 
+// get task by id
+const getTaskById = async () => {
+  
+}
+
 // expose methods
 export {
   updateTaskStatusAction,

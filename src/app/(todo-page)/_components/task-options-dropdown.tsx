@@ -24,11 +24,6 @@ export default function TaskOptionsDropdown({
 }) {
   const [open, setOpen] = useState(false);
 
-  // Function to close dropdown when dialog opens
-  const handleOpenDialog = () => {
-    setOpen(false);
-  };
-
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -43,8 +38,12 @@ export default function TaskOptionsDropdown({
         <DropdownMenuLabel>Option</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <AddUpdateTaskPopup workspaceId={workspaceId} edit={true} />
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <AddUpdateTaskPopup
+              workspaceId={workspaceId}
+              edit={true}
+              taskId={taskId}
+            />
           </DropdownMenuItem>
           <DropdownMenuItem>
             <DeletePopup workspaceId={workspaceId} taskId={taskId} />

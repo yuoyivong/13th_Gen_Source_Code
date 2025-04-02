@@ -18,6 +18,11 @@ const getAllTasks = async (workspaceId: WorkspaceType["workspaceId"]) => {
   return tasks;
 };
 
+// get task by id
+const getTaskById = async () => {
+  // const taskId = await 
+}
+
 // create new task
 const createNewTask = async (
   workspaceId: WorkspaceType["workspaceId"],
@@ -93,6 +98,8 @@ const deleteTaskById = async (
   const message = await response.json();
   return message;
 };
+
+
 
 // expose methods
 export {

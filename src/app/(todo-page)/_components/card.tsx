@@ -4,12 +4,10 @@ import formattedDate from "@/lib/format-date";
 import React from "react";
 import SelectTaskStatus from "./select-task-status";
 import { WorkspaceType } from "@/interface/workspace-type";
-import { Clock, More } from "iconsax-react";
-import DeletePopup from "./delete";
-import AddUpdateTaskPopup from "./add-update-task";
+import { Clock } from "iconsax-react";
 import TaskOptionsDropdown from "./task-options-dropdown";
 
-export default function CardComponent({
+export default async function CardComponent({
   task,
   workspaceId,
 }: {

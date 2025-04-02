@@ -1,5 +1,6 @@
 "use client";
-import { createNewTaskAction } from "@/actions/task-action";
+import { createNewTaskAction, updateTaskAction } from "@/actions/task-action";
+import { getWorkspaceByIdAction } from "@/actions/workspace-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -27,26 +28,30 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tag } from "@/enum/tag";
+import { APIResponse } from "@/interface/api-response";
+import { TaskType } from "@/interface/task-type";
 import { WorkspaceType } from "@/interface/workspace-type";
 import { cn } from "@/lib/utils";
 import { taskSchema } from "@/schema/task-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { AddSquare, Calendar2, Edit } from "iconsax-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function AddUpdateTaskPopup({
   workspaceId,
   edit,
-  onDialogOpen,
+  taskId,
 }: {
   workspaceId: WorkspaceType["workspaceId"];
   edit: boolean;
-  onDialogOpen?: () => void;
+  taskId: TaskType["taskId"];
 }) {
   const [date, setDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
+  const [workspace, setWorkspace] = useState<TaskType>();
+
   const {
     register,
     handleSubmit,
@@ -74,7 +79,11 @@ export default function AddUpdateTaskPopup({
   // handle form submit
   const handleFormSubmit = async (data: any) => {
     console.log(data);
-    await createNewTaskAction(workspaceId, data);
+    if (!edit) {
+      await createNewTaskAction(workspaceId, data);
+    } else {
+      await updateTaskAction(workspaceId, taskId, data);
+    }
     resetForm(); // Call the function to reset everything
     setIsOpen(false);
   };
@@ -89,20 +98,40 @@ export default function AddUpdateTaskPopup({
   };
 
   // handle clear value when close popup
-  const handleOpenDialog = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) resetForm();
+  const handleDialogToggle = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) resetForm(); // Reset form when dialog closes
   };
 
+  const handleTriggerClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent dropdown from interfering
+    setIsOpen(true); // Open dialog
+  };
+
+  // fetch workspace by id
+  useEffect(() => {
+    const fetchWorkspace = async () => {
+      const workspaceById = (await getWorkspaceByIdAction(
+        workspaceId
+      )) as APIResponse<TaskType>;
+      setWorkspace(workspaceById?.payload);
+    };
+
+    fetchWorkspace();
+  }, [workspaceId]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenDialog}>
+    <Dialog open={isOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger asChild>
         {!edit ? (
           <Button className="cursor-pointer hover:bg-blue-700 hover:text-white bg-royal-blue rounded-3xl text-lg h-10 w-32 text-white">
             <AddSquare size="24" color="#ffffff" variant="Broken" /> New Task
           </Button>
         ) : (
-          <button className="flex items-center gap-2">
+          <button
+            className="flex items-center gap-2"
+            onClick={handleTriggerClick}
+          >
             <Edit size="20" color="#4379F2" variant="Broken" />
             <span className="text-royal-blue text-base">Update</span>
           </button>
@@ -111,7 +140,9 @@ export default function AddUpdateTaskPopup({
       <DialogContent className="sm:max-w-[455px] bg-ghost-white">
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <DialogHeader>
-            <DialogTitle>Create New Task</DialogTitle>
+            <DialogTitle>
+              {!edit ? "Create New Task" : "Update Task"}
+            </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {/* task title */}
@@ -126,6 +157,7 @@ export default function AddUpdateTaskPopup({
                 className={`${
                   errors?.taskTitle ? "border border-red-600" : ""
                 }`}
+                defaultValue={workspace?.}
               />
 
               {errors?.taskTitle && (
