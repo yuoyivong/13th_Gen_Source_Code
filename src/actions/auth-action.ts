@@ -1,10 +1,10 @@
 "use server";
 import { signIn } from "@/auth";
 import { User } from "@/interface/user-type";
+import { registerService } from "@/services/auth-service";
+import { redirect } from "next/navigation";
 
 const loginAction = async (user: User) => {
-  console.log("user action", user);
-
   await signIn("credentials", {
     email: user.email,
     password: user.password,
@@ -12,5 +12,11 @@ const loginAction = async (user: User) => {
   });
 };
 
+// register action
+const registerAction = async (user: User) => {
+  await registerService(user);
+  redirect("/login");
+};
+
 // export method
-export { loginAction };
+export { loginAction, registerAction };

@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { APIResponse } from "@/interface/api-response";
 import { WorkspaceType } from "@/interface/workspace-type";
-import { AddSquare, More } from "iconsax-react";
+import { AddSquare, Edit, More } from "iconsax-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -32,6 +32,7 @@ export default function AddUpdateWorkspacePopup({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<{ workspaceName: string }>();
 
@@ -56,7 +57,7 @@ export default function AddUpdateWorkspacePopup({
   };
 
   // Handle dialog state change (open/close) and form reset
-  const handleDialogStateChange = (open: boolean) => {
+  const handleDialogStateChange = async (open: boolean) => {
     setIsOpen(open);
     if (!open) {
       reset(); // Reset the form when modal closes
@@ -65,18 +66,21 @@ export default function AddUpdateWorkspacePopup({
 
   // get workspace by id
   const getById = async (id: WorkspaceType["workspaceId"]) => {
+    console.log("ID : ", id);
+
     const workspace = (await getWorkspaceByIdAction(
       id
     )) as APIResponse<WorkspaceType>;
     setWName(workspace?.payload?.workspaceName);
+    setValue("workspaceName", workspace?.payload?.workspaceName);
   };
 
-  useEffect(() => {
-    console.log(wId);
-    if (wId) {
-      getById(wId);
+  const handleWorkspaceIdChange = async () => {
+    if (workspaceId) {
+      await getById(workspaceId);
     }
-  }, [wId]);
+    setWId(workspaceId);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogStateChange}>
@@ -89,12 +93,12 @@ export default function AddUpdateWorkspacePopup({
             className="cursor-pointer"
           />
         ) : (
-          <More
+          <Edit
             size="20"
             color="#1E293B"
             variant="Broken"
             className="cursor-pointer"
-            onClick={() => setWId(workspaceId)}
+            onClick={handleWorkspaceIdChange}
           />
         )}
       </DialogTrigger>
@@ -117,7 +121,7 @@ export default function AddUpdateWorkspacePopup({
               {...register("workspaceName", {
                 required: "* Workspace name cannot be empty.",
               })}
-              defaultValue={wName}
+              defaultValue={wName || "Hellfdaf"}
               type="text"
               id="workspaceName"
               placeholder="Please type your workspace name"

@@ -49,6 +49,8 @@ const deleteTaskAction = async (
   taskId: TaskType["taskId"]
 ) => {
   const deletedTask = await deleteTaskById(taskId, workspaceId);
+  console.log(" Delete : ", deletedTask);
+
   revalidateTag("tasks");
   return deletedTask;
 };

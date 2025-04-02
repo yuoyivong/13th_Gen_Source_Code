@@ -3,13 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema } from "@/schema/form-schema";
-import { User } from "@/interface/user-type";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { KeyRound, Mail } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { loginAction } from "@/actions/login-action";
+import { loginAction } from "@/actions/auth-action";
+import { Key, Sms } from "iconsax-react";
 
 export default function LoginComponent() {
   const {
@@ -37,7 +36,7 @@ export default function LoginComponent() {
           htmlFor="email"
           className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
-          <Mail size={20} /> Email
+          <Sms size="20" color="#94A3B8" variant="Broken" /> Email
         </Label>
 
         <Input
@@ -62,7 +61,7 @@ export default function LoginComponent() {
           htmlFor="password"
           className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
-          <KeyRound size={20} /> Password
+          <Key size="20" color="#94a3b8" variant="Broken" /> Password
         </Label>
 
         <Input

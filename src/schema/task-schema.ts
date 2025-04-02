@@ -12,5 +12,5 @@ export const taskSchema = z.object({
     .refine((date) => date >= new Date(), {
       message: "* End date cannot be in the past.", // Ensure date is not in the past
     }),
-  details: z.string().optional(),
+  taskDetails: z.string().optional(),
 });

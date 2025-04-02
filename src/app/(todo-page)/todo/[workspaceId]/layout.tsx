@@ -1,19 +1,9 @@
-import type { Metadata } from "next";
-import "../../../globals.css";
 import Logo from "@/components/logo";
+import React from "react";
 import SidebarComponent from "../../_components/sidebar";
-import { UUID } from "crypto";
 import { WorkspaceType } from "@/interface/workspace-type";
 
-export const metadata: Metadata = {
-  title: {
-    template: "%s | Monster",
-    default: "Todo List | Monster",
-  },
-  description: "Homework 006 - Next.js",
-};
-
-export default async function AuthenticationLayout({
+export default async function layout({
   children,
   params,
 }: {
@@ -21,19 +11,17 @@ export default async function AuthenticationLayout({
   params: Promise<{ workspaceId: WorkspaceType["workspaceId"] }>;
 }) {
   return (
-    <html lang="en">
-      <body className="text-charcoal bg-ghost-white w-full flex">
-        <div className="w-1/5">
-          <div className="m-16 text-center  sticky top-20 z-20">
-            <Logo />
-          </div>
-          <div className="sticky top-44">
-            <SidebarComponent workspaceId={(await params)?.workspaceId} />
-          </div>
+    <div className="flex">
+      <div className="w-1/5">
+        <div className="m-16 text-center  sticky top-20 z-20">
+          <Logo />
         </div>
+        <div className="sticky top-44">
+          <SidebarComponent workspaceId={(await params)?.workspaceId} />
+        </div>
+      </div>
 
-        <div className="w-4/5">{children}</div>
-      </body>
-    </html>
+      <div className="w-4/5">{children}</div>
+    </div>
   );
 }

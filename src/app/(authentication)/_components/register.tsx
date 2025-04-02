@@ -8,6 +8,7 @@ import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Key, Sms, User } from "iconsax-react";
+import { registerAction } from "@/actions/auth-action";
 
 export default function RegisterComponent() {
   const {
@@ -20,8 +21,9 @@ export default function RegisterComponent() {
   });
 
   //   handle form submit
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = async (data: any) => {
     console.log(data);
+    await registerAction(data);
     reset();
   };
 

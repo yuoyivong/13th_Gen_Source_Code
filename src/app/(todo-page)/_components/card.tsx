@@ -1,10 +1,13 @@
 import { Status } from "@/enum/status";
 import { TaskType } from "@/interface/task-type";
 import formattedDate from "@/lib/format-date";
-import { Clock, Ellipsis } from "lucide-react";
 import React from "react";
 import SelectTaskStatus from "./select-task-status";
 import { WorkspaceType } from "@/interface/workspace-type";
+import { Clock, More } from "iconsax-react";
+import DeletePopup from "./delete";
+import AddUpdateTaskPopup from "./add-update-task";
+import TaskOptionsDropdown from "./task-options-dropdown";
 
 export default function CardComponent({
   task,
@@ -18,7 +21,11 @@ export default function CardComponent({
       <div className="p-5">
         <div className="flex justify-between">
           <h2 className="text-xl font-bold capitalize">{task?.taskTitle}</h2>
-          <Ellipsis />
+          {/* <UpdateDeleteDropdown workspaceId={workspaceId} /> */}
+          <TaskOptionsDropdown
+            workspaceId={workspaceId}
+            taskId={task?.taskId}
+          />
         </div>
 
         {/* task detials */}
@@ -55,7 +62,8 @@ export default function CardComponent({
 
         {/* date */}
         <p className="flex gap-2 text-light-steel-blue">
-          <Clock size={22} /> {formattedDate(task?.endDate || new Date())}
+          <Clock size="22" color="#94A3B8" variant="Broken" />{" "}
+          {formattedDate(task?.endDate || new Date())}
         </p>
       </div>
     </div>

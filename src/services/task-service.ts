@@ -85,6 +85,7 @@ const deleteTaskById = async (
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_AUTH_BASE_URL}/task/${taskId}/workspace/${workspaceId}`,
     {
+      method: "DELETE",
       headers,
     }
   );

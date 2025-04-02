@@ -103,7 +103,7 @@ export default async function TodoPage({
 
       {/* Add New Task Popup Button */}
       <div className="fixed bottom-10 right-10 flex gap-4 items-center">
-        <AddUpdateTaskPopup workspaceId={workspaceId} />
+        <AddUpdateTaskPopup workspaceId={workspaceId} edit={false} />
 
         <div className="bg-white p-3 rounded-full">
           <img src="/4 dots.svg" alt="4 dots" />

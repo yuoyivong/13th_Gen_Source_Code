@@ -5,6 +5,7 @@ import React from "react";
 import { LogoutCurve, More, Star1 } from "iconsax-react";
 import AddUpdateWorkspacePopup from "./add-update-workspace";
 import WorkspaceComponent from "./workspace";
+import LogoutComponent from "./logout";
 
 export default async function SidebarComponent({
   workspaceId,
@@ -54,9 +55,7 @@ export default async function SidebarComponent({
         )}
       </div>
 
-      <p className="mx-6 flex gap-2 items-center text-xl text-persian-green ">
-        <LogoutCurve size="20" color="#009990" variant="Broken" /> Logout
-      </p>
+      <LogoutComponent />
     </aside>
   );
 }

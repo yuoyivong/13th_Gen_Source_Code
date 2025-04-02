@@ -19,7 +19,7 @@ export default function WorkspaceComponent({
     <div
       className={`${
         workspace?.workspaceId === id ? "bg-light-steel-blue/5" : ""
-      } flex justify-between items-center mt-2 py-3 px-7 w-full rounded-lg `}
+      } flex justify-between items-center mt-2 py-3 px-7 w-full rounded-lg hover:bg-light-steel-blue/10`}
     >
       <Link
         href={{

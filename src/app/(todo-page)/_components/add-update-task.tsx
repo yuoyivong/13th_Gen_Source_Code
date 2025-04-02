@@ -32,14 +32,18 @@ import { cn } from "@/lib/utils";
 import { taskSchema } from "@/schema/task-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { AddSquare, Calendar2 } from "iconsax-react";
+import { AddSquare, Calendar2, Edit } from "iconsax-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function AddUpdateTaskPopup({
   workspaceId,
+  edit,
+  onDialogOpen,
 }: {
   workspaceId: WorkspaceType["workspaceId"];
+  edit: boolean;
+  onDialogOpen?: () => void;
 }) {
   const [date, setDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +60,7 @@ export default function AddUpdateTaskPopup({
       taskTitle: "",
       tag: "",
       endDate: undefined,
-      details: "",
+      taskDetails: "",
     },
   });
 
@@ -93,9 +97,16 @@ export default function AddUpdateTaskPopup({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenDialog}>
       <DialogTrigger asChild>
-        <Button className="cursor-pointer hover:bg-blue-700 hover:text-white bg-royal-blue rounded-3xl text-lg h-10 w-32 text-white">
-          <AddSquare size="24" color="#ffffff" variant="Broken" /> New Task
-        </Button>
+        {!edit ? (
+          <Button className="cursor-pointer hover:bg-blue-700 hover:text-white bg-royal-blue rounded-3xl text-lg h-10 w-32 text-white">
+            <AddSquare size="24" color="#ffffff" variant="Broken" /> New Task
+          </Button>
+        ) : (
+          <button className="flex items-center gap-2">
+            <Edit size="20" color="#4379F2" variant="Broken" />
+            <span className="text-royal-blue text-base">Update</span>
+          </button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[455px] bg-ghost-white">
         <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -214,7 +225,7 @@ export default function AddUpdateTaskPopup({
                 Details
               </Label>
               <Textarea
-                {...register("details")}
+                {...register("taskDetails")}
                 placeholder="Type your message here."
                 className="col-span-3"
               />
