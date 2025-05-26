@@ -2,11 +2,13 @@ import { ArrowRight, Calendar } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import DeletePopup from "./delete-popup";
+import MemoryPopup from "./memory-popup";
 
 export default function RomanticCardComponent() {
   return (
     <div className="space-y-4">
-      <div className="w-full h-[263px] relative">
+      <div className="w-full h-64 relative">
         {/* image */}
         <Image
           src={
@@ -16,6 +18,13 @@ export default function RomanticCardComponent() {
           alt="Switzerland image"
           className="rounded-3xl object-cover"
         />
+
+        {/* edit and delete icons */}
+        <div className="p-2 flex flex-col gap-2 items-end">
+          <DeletePopup />
+          {/* edit popup */}
+          <MemoryPopup type="edit" />
+        </div>
       </div>
 
       <div className="text-dark-cyan flex justify-between items-center">

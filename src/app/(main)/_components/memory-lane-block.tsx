@@ -3,9 +3,9 @@ import React from "react";
 
 export default function MemoryLaneBlock() {
   return (
-    <section className="flex gap-10">
+    <section className="flex gap-10 container mx-auto ">
       {/* first block */}
-      <div className="w-[335px] h-[526px] relative">
+      <div className="w-[335px] h-[526px] relative hidden lg:block">
         <Image
           src={
             "https://i.pinimg.com/736x/0f/d5/f0/0fd5f03b661fceb3c9fd74eb6e52a3be.jpg"
@@ -17,7 +17,7 @@ export default function MemoryLaneBlock() {
       </div>
 
       {/* second block */}
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-10 md:mx-auto">
         <div className="flex gap-10">
           {/* first image - a girl with a guitar */}
           <div className="w-[298px] h-[175px] relative">
@@ -57,7 +57,7 @@ export default function MemoryLaneBlock() {
       </div>
 
       {/* third block */}
-      <div className="flex flex-col gap-10">
+      <div className="hidden lg:flex flex-col gap-10">
         <div className="w-[422px] h-[324px] relative">
           <Image
             src={

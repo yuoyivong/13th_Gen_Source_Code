@@ -27,7 +27,7 @@ export default function RootLayout({
       <body
         className={`${rubik.className} text-dark-blue antialiased h-screen flex flex-col justify-between space-y-10`}
       >
-        <div className="container mx-auto space-y-5">
+        <div className="space-y-5">
           {/* navbar */}
           <NavbarComponent />
           {children}
