@@ -24,7 +24,7 @@ export default function DeletePopup() {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you absolutely sure to delete this?
+            Are you absolutely sure you want to delete this?
           </AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your

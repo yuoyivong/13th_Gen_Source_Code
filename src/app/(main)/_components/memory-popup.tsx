@@ -25,23 +25,108 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { PlanStatus } from "@/lib/status-enum";
 import { cn } from "@/lib/utils";
+import { romanticFormSchema } from "@/schema/romantic-form-schema";
+import { RomanticDateRequest } from "@/types/request/romantic-date-request";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
   Add,
   Calendar2,
   Edit,
   GalleryAdd,
+  GalleryImport,
   Location,
   NoteText,
   Status,
+  Trash,
 } from "iconsax-react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
+// create romantic date schema
+const createRomanticDateSchema = romanticFormSchema.extend({
+  status: z.nativeEnum(PlanStatus).optional(),
+});
+
+// update romantic date schema
+const updateRomanticDateSchema = romanticFormSchema.extend({
+  status: z.nativeEnum(PlanStatus, {
+    required_error: "* Status cannot be empty.",
+  }),
+});
 
 export default function MemoryPopup({ type }: { type: string }) {
   const [date, setDate] = useState<Date>();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // Track file name for UI
+  const [isOpen, setIsOpen] = useState(false);
+
+  // choose schema based one type
+  const schema = useMemo(() => {
+    return type === "edit"
+      ? updateRomanticDateSchema
+      : createRomanticDateSchema;
+  }, [type]);
+
+  // validation with zod and react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    control,
+    trigger,
+  } = useForm<RomanticDateRequest>({
+    resolver: zodResolver(schema),
+    mode: "all",
+    reValidateMode: "onChange",
+    defaultValues: {
+      location: "",
+      date: undefined,
+      details: "",
+      status: undefined,
+    },
+  });
+
+  const handleFormSubmit = (data: RomanticDateRequest) => {
+    console.log("Romantic date : ", data);
+  };
+
+  const handleDateChange = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    if (selectedDate) setValue("date", selectedDate, { shouldValidate: true });
+  };
+
+  // handle input file change
+  const handleInputFileChange = () => {
+    setValue("gallery", undefined as any);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+  };
+
+  // manually reset form
+  const resetForm = () => {
+    reset();
+    setDate(undefined);
+  };
+
+  // handle clear value when close popup
+  const handleDialogToggle = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) resetForm();
+  };
+
+  // use watch to get current value from status select option
+  const statusValue = watch("status");
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger asChild>
         {type === "create" ? (
           <Button
@@ -51,11 +136,12 @@ export default function MemoryPopup({ type }: { type: string }) {
             <Add size="32" color="#FFFFFF" variant="Broken" /> New Memory
           </Button>
         ) : (
-          <div className="cursor-pointer p-2 rounded-full inline-flex bg-white/90 drop-shadow-steel-gray-xs">
+          <button className="cursor-pointer p-2 rounded-full inline-flex bg-white/90 drop-shadow-steel-gray-xs">
             <Edit size="24" color="#FF9F00" variant="Broken" />
-          </div>
+          </button>
         )}
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-md rounded-3xl">
         <DialogHeader>
           <DialogTitle className="font-semibold text-xl">
@@ -68,9 +154,12 @@ export default function MemoryPopup({ type }: { type: string }) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-6 py-4">
+        <form
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="grid gap-6 pt-4"
+        >
           {/* location */}
-          <div className="space-y-3">
+          <div className="space-y-1.5">
             <div className="flex gap-1.5">
               <Location size="20" color="#94A3B8" variant="Broken" />
               <Label
@@ -82,15 +171,27 @@ export default function MemoryPopup({ type }: { type: string }) {
             </div>
 
             <Input
+              {...register("location")}
               id="location"
               type="text"
-              placeholder="Please put location"
-              className="bg-white-smoke border-none placeholder:text-gray-300 py-5 px-4"
+              placeholder="Please enter your date location"
+              className={`${
+                errors?.location
+                  ? "focus:outline focus:outline-red-600 border border-red-600"
+                  : "border-0"
+              } bg-white-smoke placeholder:text-gray-300 py-5 px-4`}
             />
+
+            {/* show error on location field */}
+            {errors?.location && (
+              <p className="text-red-600 text-sm mt-2">
+                {errors?.location?.message}
+              </p>
+            )}
           </div>
 
           {/* date */}
-          <div className="space-y-3">
+          <div className="space-y-1.5">
             <div className="flex gap-1.5">
               <Calendar2 size="20" color="#94a3b8" variant="Broken" />
               <Label
@@ -101,13 +202,17 @@ export default function MemoryPopup({ type }: { type: string }) {
               </Label>
             </div>
 
-            <Popover>
+            <Popover {...register("date")}>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "w-full border-none bg-white-smoke py-5 px-4 justify-start text-left font-normal cursor-pointer",
-                    !date && "text-muted-foreground"
+                    `${
+                      errors?.date
+                        ? "focus:outline focus:outline-red-600 border border-red-600"
+                        : "border-0"
+                    } w-full bg-white-smoke py-5 px-4 justify-start text-left font-normal cursor-pointer",
+                    !date && "text-muted-foreground`
                   )}
                 >
                   {date ? (
@@ -117,38 +222,24 @@ export default function MemoryPopup({ type }: { type: string }) {
                   )}
                 </Button>
               </PopoverTrigger>
+              {errors?.date && (
+                <p className="text-red-600 text-sm">{errors?.date?.message}</p>
+              )}
+
               <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={handleDateChange}
                   initialFocus
                 />
               </PopoverContent>
             </Popover>
           </div>
 
-          {/* gallery */}
-          <div className="space-y-3">
-            <div className="flex gap-1.5">
-              <GalleryAdd size="20" color="#94a3b8" variant="Broken" />
-              <Label
-                htmlFor="gallery"
-                className="text-right text-steel-gray text-md font-normal"
-              >
-                Gallery
-              </Label>
-            </div>
-            <Input
-              id="gallery"
-              type="file"
-              className="bg-white-smoke border-none cursor-pointer"
-            />
-          </div>
-
           {/* status */}
           {type === "edit" && (
-            <div className="space-y-3">
+            <div className="space-y-1.5">
               <div className="flex gap-1.5">
                 <Status size="20" color="#94a3b8" variant="Broken" />
                 <Label
@@ -159,24 +250,53 @@ export default function MemoryPopup({ type }: { type: string }) {
                 </Label>
               </div>
 
-              <Select>
-                <SelectTrigger className="w-full border-none bg-white-smoke py-5">
-                  <SelectValue
-                    placeholder="Please choose one of these status
-                  "
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ONGOING">ONGOING</SelectItem>
-                  <SelectItem value="PENDING">PENDING</SelectItem>
-                  <SelectItem value="COMPLETED">COMPLETED</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // Trigger validation to ensure the form state updates
+                      trigger("status");
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "bg-white-smoke data-[placeholder]:text-gray-300 w-full  py-5",
+                        errors?.status &&
+                          "bg-white-smoke focus:outline focus:outline-red-600 border border-red-600"
+                      )}
+                    >
+                      <SelectValue placeholder="Please choose one of these status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ONGOING">
+                        {PlanStatus.ongoing}
+                      </SelectItem>
+                      <SelectItem value="PENDING">
+                        {PlanStatus.pending}
+                      </SelectItem>
+                      <SelectItem value="COMPLETED">
+                        {PlanStatus.completed}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              {/* show select error */}
+              {errors?.status && (
+                <p className="text-red-600 text-sm mt-2">
+                  {errors?.status?.message}
+                </p>
+              )}
             </div>
           )}
 
           {/* details */}
-          <div className="space-y-3">
+          <div className="space-y-1.5">
             <div className="flex gap-1.5">
               <NoteText size="20" color="#94a3b8" variant="Broken" />
               <Label
@@ -187,28 +307,154 @@ export default function MemoryPopup({ type }: { type: string }) {
               </Label>
             </div>
             <Textarea
+              {...register("details")}
               placeholder="Type some details"
-              className="border-none bg-white-smoke placeholder:text-gray-300"
+              className={`${
+                errors?.details
+                  ? "focus:outline focus:outline-red-600 border border-red-600"
+                  : "border-0"
+              } bg-white-smoke placeholder:text-gray-300`}
             />
+
+            {/* show details error message */}
+            {errors?.details && (
+              <p className="text-red-600 text-sm mt-2">
+                {errors?.details?.message}
+              </p>
+            )}
           </div>
-        </div>
-        <DialogFooter>
-          {type === "create" ? (
-            <Button
-              type="submit"
-              className="bg-dark-cyan text-white hover:bg-dark-blue cursor-pointer"
-            >
-              Create
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              className="bg-dark-blue text-white hover:bg-blue-950 cursor-pointer"
-            >
-              Save Changes
-            </Button>
-          )}
-        </DialogFooter>
+
+          {/* gallery */}
+          <div className="space-y-1.5">
+            <div className="flex gap-1.5">
+              <GalleryAdd size="20" color="#94a3b8" variant="Broken" />
+              <Label
+                htmlFor="gallery"
+                className="text-right text-steel-gray text-md font-normal"
+              >
+                Gallery
+              </Label>
+            </div>
+            {/* <div className="flex items-center gap-2">
+              <Input
+                {...register("gallery")}
+                id="gallery"
+                type="file"
+                className="bg-white-smoke border-none cursor-pointer"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if(file) {
+                    onChange(file)
+
+                  }
+                }}
+              />
+
+            </div> */}
+            <Controller
+              name="gallery"
+              control={control}
+              render={({
+                field: { onChange, value, ref },
+                fieldState: { error },
+              }) => (
+                <div className="mt-1">
+                  {!value ? (
+                    <label
+                      htmlFor="gallery-input"
+                      className={`${
+                        error?.message ? "border-red-600" : "border-gray-300"
+                      } flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-white-smoke hover:bg-gray-100`}
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <GalleryImport size="32" color="#94A3B8" />
+                        <p className="my-2 text-sm text-gray-400">
+                          <span className="font-semibold">Click to upload</span>
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          PNG, JPG, JPEG (MAX. 5MB)
+                        </p>
+                      </div>
+                      <input
+                        id="gallery-input"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            onChange(file);
+                            if (previewUrl) {
+                              URL.revokeObjectURL(previewUrl);
+                            }
+                            setPreviewUrl(URL.createObjectURL(file));
+                          }
+                        }}
+                        ref={ref}
+                      />
+                    </label>
+                  ) : (
+                    <div className="relative border-2 border-gray-200 border-dashed bg-white-smoke rounded-lg p-4">
+                      <div className="flex items-center space-x-4">
+                        {previewUrl && (
+                          <div className="flex-shrink-0">
+                            <img
+                              src={previewUrl || "/placeholder.svg"}
+                              alt="Preview"
+                              className="w-16 h-16 object-cover rounded-lg"
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {value.name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {(value.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleInputFileChange}
+                          className="flex-shrink-0 hover:bg-red-100 cursor-pointer"
+                        >
+                          <Trash size="32" color="#CB0404" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {error && (
+                    <p className="text-sm text-red-500 mt-2">{error.message}</p>
+                  )}
+                </div>
+              )}
+            />
+            {/* {errors?.gallery && (
+              <p className="text-red-600 text-sm">{errors?.gallery?.message}</p>
+            )} */}
+          </div>
+
+          {/* create and edit button */}
+          <DialogFooter>
+            {type === "create" ? (
+              <Button
+                type="submit"
+                className="bg-dark-cyan text-white hover:bg-dark-blue cursor-pointer"
+              >
+                Create
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="bg-dark-blue text-white hover:bg-blue-950 cursor-pointer"
+              >
+                Save Changes
+              </Button>
+            )}
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
