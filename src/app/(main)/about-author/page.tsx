@@ -1,5 +1,5 @@
 import React from "react";
-import AuthorCardComponent from "../_components/author-card";
+import AuthorCardComponent from "../_components/card/author-card";
 import authorDataList from "@/data/author-data";
 
 export default function AboutAuthorPage() {

@@ -2,8 +2,8 @@ import { ArrowRight, Calendar } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import DeletePopup from "./delete-popup";
-import MemoryPopup from "./memory-popup";
+import DeletePopup from "../popup/delete-popup";
+import MemoryPopup from "../popup/memory-popup";
 
 export default function RomanticCardComponent() {
   return (
