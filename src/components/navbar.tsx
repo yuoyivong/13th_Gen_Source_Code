@@ -5,8 +5,17 @@ import Link from "next/link";
 import { HambergerMenu } from "iconsax-react";
 import { X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import ProfileSnippet from "./profile-snippet";
+import { Session } from "@/types/auth/session";
+import ClientWrapper from "@/app/(main)/_components/client-wrapper";
 
-export default function NavbarComponent() {
+export default function NavbarComponent({
+  session,
+  profileSnippet,
+}: {
+  session: Session | undefined;
+  profileSnippet: React.ReactNode;
+}) {
   // responsive on mobile
   const [isMobile, setIsMobile] = useState(false);
 
@@ -24,9 +33,9 @@ export default function NavbarComponent() {
   return (
     <>
       <nav className="sticky top-0 bg-white/80 z-50 backdrop-blur-xs">
-        <div className="flex items-center justify-between py-6 container mx-auto transition-all duration-300 pl-3 md:px-0">
+        <div className="flex items-center justify-between py-3 container mx-auto transition-all duration-300 pl-3 md:px-0">
           {/* logo */}
-          <div className="text-3xl md:text-2xl transform transition-transform duration-200 hover:scale-105">
+          <div className="text-3xl transform transition-transform duration-200 hover:scale-105">
             <LogoComponent />
           </div>
 
@@ -55,19 +64,26 @@ export default function NavbarComponent() {
 
           {/* sign up and login button */}
           {/* desktop navigation links - hidden on mobile */}
-          <div className="hidden md:block space-x-6 font-medium text-lg">
-            <Link
-              href={"/register"}
-              className="text-dark-cyan hover:text-dark-blue transition-all duration-300 transform hover:scale-105"
-            >
-              Sign Up
-            </Link>
-            <Link
-              href={"/login"}
-              className="bg-dark-cyan rounded-lg py-2 px-6 text-white hover:bg-dark-blue transition-all duration-300 transform hover:scale-105"
-            >
-              Login
-            </Link>
+
+          <div className="hidden md:block font-medium text-lg">
+            {session ? (
+              <ClientWrapper>{profileSnippet}</ClientWrapper>
+            ) : (
+              <div className="py-3 space-x-6">
+                <Link
+                  href={"/register"}
+                  className="text-dark-cyan hover:text-dark-blue transition-all duration-300 transform hover:scale-105"
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  href={"/login"}
+                  className="bg-dark-cyan rounded-lg py-2 px-6 text-white hover:bg-dark-blue transition-all duration-300 transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* mobile hamburger button - visible only on mobile */}

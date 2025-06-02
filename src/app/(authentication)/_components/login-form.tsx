@@ -1,4 +1,5 @@
 "use client";
+import { loginAction } from "@/actions/auth-action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,8 +26,11 @@ export default function LoginComponent() {
   });
 
   // handle submit form login
-  const handleFormSubmit = (data: UserCredentails) => {
+  const handleFormSubmit = async (data: UserCredentails) => {
     console.log("User logs in : ", data);
+    await loginAction(data);
+
+    reset();
   };
 
   // password visibility

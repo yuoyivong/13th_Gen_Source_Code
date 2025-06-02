@@ -3,6 +3,8 @@ import { Rubik } from "next/font/google";
 import "../globals.css";
 import NavbarComponent from "@/components/navbar";
 import FooterComponent from "@/components/footer";
+import { auth } from "@/auth";
+import ProfileSnippet from "@/components/profile-snippet";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -18,22 +20,28 @@ export const metadata: Metadata = {
   description: "Memory is what we should remember.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+  console.log("Session : ", session);
+
   return (
     <html lang="en">
-      <body
-        className={`${rubik.className} text-dark-blue antialiased h-screen flex flex-col justify-between space-y-10`}
-      >
-        <div className="space-y-5">
-          {/* navbar */}
-          <NavbarComponent />
-          {children}
+      <body className={`${rubik.className} text-dark-blue antialiased`}>
+        <div className="min-h-screen flex flex-col justify-between space-y-10 ">
+          <div className="space-y-5">
+            {/* navbar */}
+            <NavbarComponent
+              session={session || undefined}
+              profileSnippet={<ProfileSnippet />}
+            />
+            {children}
+          </div>
+          <FooterComponent />
         </div>
-        <FooterComponent />
       </body>
     </html>
   );

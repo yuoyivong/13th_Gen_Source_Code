@@ -8,9 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Eye, Trash } from "iconsax-react";
+import { Eye, Trash } from "iconsax-react";
 import Link from "next/link";
 import React from "react";
+import MemoryPopup from "../popup/memory-popup";
+import DeletePopup from "../popup/delete-popup";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RomanticDateTable() {
   return (
@@ -20,40 +23,46 @@ export default function RomanticDateTable() {
       </TableCaption>
       <TableHeader className="bg-white-smoke w-full text-center">
         <TableRow>
-          <TableHead className="pl-8 text-dark-blue text-center text-base rounded-tl-lg font-normal">
+          <TableHead className="pl-8 text-dark-blue text-base rounded-tl-lg font-normal w-1/12">
+            <Checkbox />
+          </TableHead>
+          <TableHead className="text-dark-blue text-base font-normal w-1/10">
             No
           </TableHead>
-          <TableHead className="text-dark-blue text-base font-normal text-center">
+          <TableHead className="w-1/5 text-dark-blue text-base font-normal">
             Where we are going
           </TableHead>
-          <TableHead className="text-dark-blue text-base font-normal text-center">
+          <TableHead className="w-1/8 text-dark-blue text-base font-normal">
             Date
           </TableHead>
-          <TableHead className="text-dark-blue text-base font-normal text-center">
+          <TableHead className="w-1/5 text-dark-blue text-base font-normal ">
             What we plan to do
           </TableHead>
-          <TableHead className="text-dark-blue text-base font-normal text-center">
+          <TableHead className="w-1/8 text-dark-blue text-base font-normal text-center">
             Status
           </TableHead>
-          <TableHead className="text-dark-blue text-base rounded-tr-lg font-normal text-center">
+          <TableHead className="w-1/6 text-dark-blue text-base rounded-tr-lg font-normal text-center">
             Actions
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow className="odd:bg-white even:bg-white-smoke w-full text-center">
-          <TableCell className="pl-8 font-light py-3">001</TableCell>
+        <TableRow className="odd:bg-white even:bg-white-smoke w-full">
+          <TableCell className="pl-8 font-light py-3">
+            <Checkbox />{" "}
+          </TableCell>
+          <TableCell className="font-light py-3">001</TableCell>
           <TableCell className="font-light py-3">Paris</TableCell>
           <TableCell className="font-light py-3">15 Jan, 2027</TableCell>
           <TableCell className="font-light py-3">
             Visit the Eiffel Tower
           </TableCell>
-          <TableCell className="font-normal py-3">
+          <TableCell className="font-normal py-3 text-center">
             <span className="bg-white drop-shadow-steel-gray-xs py-2 px-4 rounded-full text-orange-peel">
               ongoing
             </span>
           </TableCell>
-          <TableCell className="font-light py-3 space-x-3">
+          <TableCell className="font-light py-3 space-x-3 text-center">
             <Button className="bg-orange-peel/20 text-orange-peel hover:bg-orange-peel/30">
               <Link
                 href={"/memory-details/1"}
@@ -62,14 +71,9 @@ export default function RomanticDateTable() {
                 <Eye size="14" color="#FF9F00" variant="Broken" /> View
               </Link>
             </Button>
-            {/* popup edit */}
-            <Button className="bg-dark-cyan/20 text-dark-cyan hover:bg-dark-cyan/30">
-              <Edit size="14" color="#309898" variant="Broken" /> Edit
-            </Button>
+            <MemoryPopup type="edit" />
             {/* popup delete */}
-            <Button className="bg-crimson-red/20 text-crimson-red hover:bg-crimson-red/30">
-              <Trash size="14" color="#CB0404" variant="Broken" /> Delete
-            </Button>
+            <DeletePopup />
           </TableCell>
         </TableRow>
       </TableBody>

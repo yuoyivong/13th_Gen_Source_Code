@@ -2,8 +2,21 @@ import { Heart } from "iconsax-react";
 import MemoryLaneBlock from "./_components/static-ui/memory-lane-block";
 import RomanticCardComponent from "./_components/card/romantic-card";
 import MemoryPopup from "./_components/popup/memory-popup";
+import { auth } from "@/auth";
+import { getAllRomanticDateList } from "@/services/romantic-date-service";
+import { APIResponse } from "@/types/response/api-response";
+import { RomanticDate } from "@/types/model/romantic-date";
 
-export default function Home() {
+export default async function Home() {
+  // get session
+  const session = await auth();
+
+  // get romantic date data
+  const romanticList = (await getAllRomanticDateList()) as APIResponse<
+    RomanticDate[]
+  >;
+  console.log("Romantic list : ", romanticList);
+
   return (
     <main className="space-y-20 container mx-auto">
       {/* memory lane block - static layout */}
@@ -24,14 +37,18 @@ export default function Home() {
           </div>
 
           {/* new memory popup form */}
-          <MemoryPopup type="create" />
+          {session && <MemoryPopup type="create" />}
         </div>
 
         {/* romantic date card */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <RomanticCardComponent />
-          <RomanticCardComponent />
-          <RomanticCardComponent />
+          {romanticList?.payload?.map((item) => (
+            <RomanticCardComponent
+              key={item?.id}
+              item={item}
+              session={session || null}
+            />
+          ))}
         </div>
       </section>
     </main>

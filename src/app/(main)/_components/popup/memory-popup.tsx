@@ -25,10 +25,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PlanStatus } from "@/lib/status-enum";
+import { PlanStatus } from "@/enum/status";
 import { cn } from "@/lib/utils";
 import { romanticFormSchema } from "@/schema/romantic-form-schema";
-import { RomanticDateRequest } from "@/types/request/romantic-date-request";
+import { RomanticDate } from "@/types/model/romantic-date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
@@ -42,7 +42,8 @@ import {
   Status,
   Trash,
 } from "iconsax-react";
-import React, { useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -64,11 +65,8 @@ export default function MemoryPopup({ type }: { type: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   // choose schema based one type
-  const schema = useMemo(() => {
-    return type === "edit"
-      ? updateRomanticDateSchema
-      : createRomanticDateSchema;
-  }, [type]);
+  const schema =
+    type === "edit" ? updateRomanticDateSchema : createRomanticDateSchema;
 
   // validation with zod and react-hook-form
   const {
@@ -77,12 +75,11 @@ export default function MemoryPopup({ type }: { type: string }) {
     formState: { errors },
     reset,
     setValue,
-    watch,
     control,
     trigger,
-  } = useForm<RomanticDateRequest>({
+  } = useForm<RomanticDate>({
     resolver: zodResolver(schema),
-    mode: "all",
+    mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
       location: "",
@@ -92,8 +89,10 @@ export default function MemoryPopup({ type }: { type: string }) {
     },
   });
 
-  const handleFormSubmit = (data: RomanticDateRequest) => {
+  // get value from form submission
+  const handleFormSubmit = (data: RomanticDate) => {
     console.log("Romantic date : ", data);
+    reset();
   };
 
   const handleDateChange = (selectedDate: Date | undefined) => {
@@ -119,11 +118,11 @@ export default function MemoryPopup({ type }: { type: string }) {
   // handle clear value when close popup
   const handleDialogToggle = (open: boolean) => {
     setIsOpen(open);
-    if (!open) resetForm();
+    if (!open) resetForm(); // Reset form when dialog closes
   };
 
-  // use watch to get current value from status select option
-  const statusValue = watch("status");
+  // get pathname
+  const pathname = usePathname();
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogToggle}>
@@ -134,6 +133,10 @@ export default function MemoryPopup({ type }: { type: string }) {
             className="bg-dark-cyan text-white hover:bg-dark-blue hover:text-white cursor-pointer"
           >
             <Add size="32" color="#FFFFFF" variant="Broken" /> New Memory
+          </Button>
+        ) : pathname === "/romantic-date" ? (
+          <Button className="bg-dark-cyan/20 text-dark-cyan hover:bg-dark-cyan/30 cursor-pointer">
+            <Edit size="14" color="#309898" variant="Broken" /> Edit
           </Button>
         ) : (
           <button className="cursor-pointer p-2 rounded-full inline-flex bg-white/90 drop-shadow-steel-gray-xs">
@@ -172,7 +175,6 @@ export default function MemoryPopup({ type }: { type: string }) {
 
             <Input
               {...register("location")}
-              id="location"
               type="text"
               placeholder="Please enter your date location"
               className={`${
@@ -202,7 +204,7 @@ export default function MemoryPopup({ type }: { type: string }) {
               </Label>
             </div>
 
-            <Popover {...register("date")}>
+            <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
@@ -335,22 +337,7 @@ export default function MemoryPopup({ type }: { type: string }) {
                 Gallery
               </Label>
             </div>
-            {/* <div className="flex items-center gap-2">
-              <Input
-                {...register("gallery")}
-                id="gallery"
-                type="file"
-                className="bg-white-smoke border-none cursor-pointer"
-                onChange={(e) => {
-                  const file = e.target.files?.[0]
-                  if(file) {
-                    onChange(file)
 
-                  }
-                }}
-              />
-
-            </div> */}
             <Controller
               name="gallery"
               control={control}
@@ -431,9 +418,6 @@ export default function MemoryPopup({ type }: { type: string }) {
                 </div>
               )}
             />
-            {/* {errors?.gallery && (
-              <p className="text-red-600 text-sm">{errors?.gallery?.message}</p>
-            )} */}
           </div>
 
           {/* create and edit button */}
