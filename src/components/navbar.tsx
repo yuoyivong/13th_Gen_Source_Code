@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import ProfileSnippet from "./profile-snippet";
 import { Session } from "@/types/auth/session";
 import ClientWrapper from "@/app/(main)/_components/client-wrapper";
+import RestrictUserPopup from "@/app/(main)/_components/popup/restrict-user-popup";
 
 export default function NavbarComponent({
   session,
@@ -41,8 +42,8 @@ export default function NavbarComponent({
 
           {/* link */}
           {/* desktop navigation links - hidden on mobile */}
-          <div className="hidden md:block font-medium space-x-6 text-lg">
-            <Link
+          <div className="hidden md:flex font-medium space-x-6 text-lg">
+            {/* <Link
               href={"/romantic-date"}
               className={`relative hover:text-dark-cyan transition-all duration-300 group ${
                 pathname === "/romantic-date" ? "text-coral-pink" : ""
@@ -50,7 +51,20 @@ export default function NavbarComponent({
             >
               Romantic Dates
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-dark-cyan transition-all duration-300 group-hover:w-full"></span>
-            </Link>
+            </Link> */}
+            <div
+              className={`relative hover:text-dark-cyan transition-all duration-300 group ${
+                pathname === "/romantic-date" ? "text-coral-pink" : ""
+              }`}
+            >
+              {session ? (
+                <Link href={"/romantic-date"}>Romantic Dates</Link>
+              ) : (
+                <RestrictUserPopup />
+              )}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-dark-cyan transition-all duration-300 group-hover:w-full"></span>
+            </div>
+
             <Link
               href={"/about-author"}
               className={`relative hover:text-dark-cyan transition-all duration-300 group ${
@@ -67,7 +81,9 @@ export default function NavbarComponent({
 
           <div className="hidden md:block font-medium text-lg">
             {session ? (
-              <ClientWrapper>{profileSnippet}</ClientWrapper>
+              <ClientWrapper>
+                <Link href={"/profile"}>{profileSnippet}</Link>
+              </ClientWrapper>
             ) : (
               <div className="py-3 space-x-6">
                 <Link

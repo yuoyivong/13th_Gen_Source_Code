@@ -10,7 +10,7 @@ export default async function ProfileSnippet() {
 
   return (
     <>
-      <div className="flex gap-5 items-center bg-white-smoke py-2.5 px-4 rounded-xl">
+      <div className="flex gap-5 items-center bg-white-smoke py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-all">
         <div className="relative w-13 h-13">
           <Image
             src={user?.payload?.profileUrl || DEFAULT_IMAGE_URL}

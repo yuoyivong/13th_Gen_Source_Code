@@ -1,7 +1,8 @@
 "use server";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { UserCredentails } from "@/types/auth/auth";
 
+// login
 const loginAction = async (user: UserCredentails) => {
   console.log("User : ", user);
 
@@ -12,5 +13,9 @@ const loginAction = async (user: UserCredentails) => {
   });
 };
 
+// log out
+const logoutAction = async () => {
+  await signOut({ redirectTo: "/" });
+};
 // expose methods
-export { loginAction };
+export { loginAction, logoutAction };

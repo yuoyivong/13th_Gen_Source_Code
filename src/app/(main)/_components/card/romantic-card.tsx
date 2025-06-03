@@ -51,13 +51,18 @@ export default function RomanticCardComponent({
       <p className="line-clamp-3 text-justify h-20">{item?.details}</p>
 
       {/* read more button */}
-      <Link
-        href={"/memory-details/1"}
-        className="flex gap-3 items-center justify-end"
-      >
-        <span className="capitalize text-crimson-red">read more</span>{" "}
-        <ArrowRight size="24" color="#CB0404" variant="Broken" />
-      </Link>
+      <div className="relative group w-fit ml-auto pl-4">
+        {/* Invisible by default, vertical line appears on hover */}
+        <span className="absolute left-0 top-0 w-0.5 h-0 bg-crimson-red transition-all duration-300 group-hover:h-full"></span>
+
+        <Link
+          href={`/memory-details/${item?.id}`}
+          className="flex gap-3 items-center justify-end hover:text-dark-cyan transition-all duration-300"
+        >
+          <span className="capitalize text-crimson-red">read more</span>
+          <ArrowRight size="24" color="#CB0404" variant="Broken" />
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+import { logoutAction } from "@/actions/auth-action";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +16,10 @@ import { LogoutCurve } from "iconsax-react";
 import React from "react";
 
 export default function LogoutPopup() {
+  // a function to handle log out
+  const handleLogout = () => {
+    logoutAction();
+  };
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -36,7 +42,10 @@ export default function LogoutPopup() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>No</AlertDialogCancel>
-          <AlertDialogAction className="bg-dark-cyan hover:bg-dark-blue">
+          <AlertDialogAction
+            className="bg-dark-cyan hover:bg-dark-blue"
+            onClick={handleLogout}
+          >
             Yes
           </AlertDialogAction>
         </AlertDialogFooter>

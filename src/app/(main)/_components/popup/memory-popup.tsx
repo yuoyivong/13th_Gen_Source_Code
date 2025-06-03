@@ -1,4 +1,5 @@
 "use client";
+import { uploadFileAction } from "@/actions/upload-file-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -89,10 +90,17 @@ export default function MemoryPopup({ type }: { type: string }) {
     },
   });
 
+  // function for handling upload file image
+  const handleUploadFile = async (file: File) => {
+    const response = await uploadFileAction(file);
+    console.log("Response file : ", response);
+  };
+
   // get value from form submission
   const handleFormSubmit = (data: RomanticDate) => {
     console.log("Romantic date : ", data);
-    reset();
+    handleUploadFile(data?.gallery);
+    resetForm();
   };
 
   const handleDateChange = (selectedDate: Date | undefined) => {
@@ -365,6 +373,7 @@ export default function MemoryPopup({ type }: { type: string }) {
                       <input
                         id="gallery-input"
                         type="file"
+                        name="file"
                         accept="image/*"
                         className="hidden"
                         onChange={(e) => {
