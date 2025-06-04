@@ -1,4 +1,5 @@
 "use client";
+import { deleteRomanticDateAction } from "@/actions/romantic-date-action";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,12 +12,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { RomanticDate } from "@/types/model/romantic-date";
 import { Trash } from "iconsax-react";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
-export default function DeletePopup() {
+export default function DeletePopup({ id }: { id: RomanticDate["id"] }) {
   const pathname = usePathname();
+
+  const handleDeleteRomanticDate = () => {
+    console.log("ID : ", id);
+
+    deleteRomanticDateAction(id);
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -44,7 +53,10 @@ export default function DeletePopup() {
           <AlertDialogCancel className="cursor-pointer">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction className="cursor-pointer bg-crimson-red hover:bg-red-800">
+          <AlertDialogAction
+            className="cursor-pointer bg-crimson-red hover:bg-red-800"
+            onClick={handleDeleteRomanticDate}
+          >
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

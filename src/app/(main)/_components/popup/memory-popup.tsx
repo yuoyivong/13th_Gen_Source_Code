@@ -1,4 +1,9 @@
 "use client";
+import {
+  addNewRomanticDateAction,
+  getRomanticDateAction,
+  updatedRomanticDateAction,
+} from "@/actions/romantic-date-action";
 import { uploadFileAction } from "@/actions/upload-file-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -29,7 +34,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlanStatus } from "@/enum/status";
 import { cn } from "@/lib/utils";
 import { romanticFormSchema } from "@/schema/romantic-form-schema";
-import { RomanticDate } from "@/types/model/romantic-date";
+import type { RomanticDate } from "@/types/model/romantic-date";
+import type { APIResponse } from "@/types/response/api-response";
+import type { FileMetadata } from "@/types/response/file-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
@@ -44,28 +51,50 @@ import {
   Trash,
 } from "iconsax-react";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
-// create romantic date schema
+// Create schemas that handle both File and optional gallery for edit mode
 const createRomanticDateSchema = romanticFormSchema.extend({
   status: z.nativeEnum(PlanStatus).optional(),
 });
 
-// update romantic date schema
-const updateRomanticDateSchema = romanticFormSchema.extend({
-  status: z.nativeEnum(PlanStatus, {
-    required_error: "* Status cannot be empty.",
-  }),
-});
+// For edit mode, make gallery optional and handle status properly
+const updateRomanticDateSchema = romanticFormSchema
+  .extend({
+    status: z.nativeEnum(PlanStatus, {
+      required_error: "* Status cannot be empty.",
+    }),
+  })
+  .merge(
+    z.object({
+      gallery: z
+        .custom<File>((val) => val instanceof File, {
+          message: "* Gallery cannot be empty.",
+        })
+        .optional(),
+    })
+  );
 
-export default function MemoryPopup({ type }: { type: string }) {
-  const [date, setDate] = useState<Date>();
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // Track file name for UI
+// Form data type
+type FormData =
+  | z.infer<typeof createRomanticDateSchema>
+  | z.infer<typeof updateRomanticDateSchema>;
+
+export default function MemoryPopup({
+  type,
+  id,
+}: {
+  type: "create" | "edit";
+  id?: RomanticDate["id"];
+}) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // choose schema based one type
+  // choose schema based on type
   const schema =
     type === "edit" ? updateRomanticDateSchema : createRomanticDateSchema;
 
@@ -78,15 +107,15 @@ export default function MemoryPopup({ type }: { type: string }) {
     setValue,
     control,
     trigger,
-  } = useForm<RomanticDate>({
+    clearErrors,
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
-    reValidateMode: "onChange",
     defaultValues: {
       location: "",
       date: undefined,
       details: "",
-      status: undefined,
+      status: undefined, // Keep as undefined, not empty string
     },
   });
 
@@ -94,43 +123,161 @@ export default function MemoryPopup({ type }: { type: string }) {
   const handleUploadFile = async (file: File) => {
     const response = await uploadFileAction(file);
     console.log("Response file : ", response);
+    return response;
   };
 
   // get value from form submission
-  const handleFormSubmit = (data: RomanticDate) => {
-    console.log("Romantic date : ", data);
-    handleUploadFile(data?.gallery);
-    resetForm();
-  };
+  const handleFormSubmit = async (data: FormData) => {
+    try {
+      setIsLoading(true);
+      console.log("Form data before processing:", data);
 
-  const handleDateChange = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    if (selectedDate) setValue("date", selectedDate, { shouldValidate: true });
+      let galleryUrl = existingImageUrl;
+
+      // Only upload new file if a new file was selected
+      if (data?.gallery instanceof File) {
+        const fileMetadata = (await handleUploadFile(
+          data.gallery
+        )) as APIResponse<FileMetadata>;
+
+        if (!fileMetadata?.payload?.fileUrl) {
+          throw new Error("File upload failed");
+        }
+
+        galleryUrl = fileMetadata.payload.fileUrl;
+      }
+
+      // For edit mode, ensure we have a gallery URL
+      if (type === "edit" && !galleryUrl) {
+        throw new Error("Gallery image is required");
+      }
+
+      // Clean the data before submission
+      const submissionData: any = {
+        location: data.location,
+        date: data.date,
+        details: data.details,
+        gallery: galleryUrl,
+      };
+
+      // Only include status if it's defined and not empty
+      if (data?.status && data?.status !== undefined) {
+        submissionData.status = data.status;
+      }
+
+      console.log("Submission data:", submissionData);
+
+      // call romantic date service
+      let response: APIResponse<RomanticDate> | undefined;
+      if (type === "create") {
+        response = await addNewRomanticDateAction(submissionData);
+      } else if (type === "edit") {
+        response = await updatedRomanticDateAction(id!, submissionData);
+      }
+
+      if (
+        response &&
+        (response.status === "CREATED" || response.status === "OK")
+      ) {
+        setIsOpen(false);
+        resetForm();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // handle input file change
   const handleInputFileChange = () => {
     setValue("gallery", undefined as any);
+    clearErrors("gallery");
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
     }
+    setExistingImageUrl(null);
   };
 
   // manually reset form
   const resetForm = () => {
-    reset();
-    setDate(undefined);
+    reset({
+      location: "",
+      date: undefined,
+      details: "",
+      status: undefined, // Reset to undefined, not empty string
+    });
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+    setExistingImageUrl(null);
   };
 
-  // handle clear value when close popup
+  // fetch romantic date data for editing
+  const fetchRomanticCardById = async (romanticId: RomanticDate["id"]) => {
+    try {
+      setIsLoading(true);
+      const response = (await getRomanticDateAction(
+        romanticId
+      )) as APIResponse<RomanticDate>;
+
+      if (response?.status === "OK" && response?.payload) {
+        const data = response.payload;
+
+        // Reset form with fetched data
+        reset({
+          location: data.location || "",
+          date: data.date ? new Date(data.date) : undefined,
+          details: data.details || "",
+          status: data.status || undefined, // Ensure it's undefined if no status
+          gallery: undefined,
+        });
+
+        // Set existing image URL and clear any gallery errors
+        if (data.gallery) {
+          if (typeof data.gallery === "string") {
+            setExistingImageUrl(data.gallery);
+          } else {
+            setExistingImageUrl(null);
+          }
+          clearErrors("gallery");
+        }
+
+        console.log("Fetched data:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // handle dialog opens or closes
   const handleDialogToggle = (open: boolean) => {
     setIsOpen(open);
-    if (!open) resetForm(); // Reset form when dialog closes
+
+    if (open && type === "edit" && id) {
+      fetchRomanticCardById(id);
+    } else if (!open) {
+      resetForm();
+    }
   };
 
   // get pathname
   const pathname = usePathname();
+
+  // Custom validation for gallery field in edit mode
+  const validateGallery = (value: File | undefined) => {
+    if (type === "create") {
+      return value instanceof File || "Gallery image is required";
+    }
+    return (
+      value instanceof File || existingImageUrl || "Gallery image is required"
+    );
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogToggle}>
@@ -161,7 +308,8 @@ export default function MemoryPopup({ type }: { type: string }) {
               : "Edit Romantic Plan"}
           </DialogTitle>
           <DialogDescription className="text-gray-400">
-            Please fill in below fields to create a new memory
+            Please fill in below fields to{" "}
+            {type === "create" ? "create a new" : "edit this"} memory
           </DialogDescription>
         </DialogHeader>
 
@@ -192,7 +340,6 @@ export default function MemoryPopup({ type }: { type: string }) {
               } bg-white-smoke placeholder:text-gray-300 py-5 px-4`}
             />
 
-            {/* show error on location field */}
             {errors?.location && (
               <p className="text-red-600 text-sm mt-2">
                 {errors?.location?.message}
@@ -212,39 +359,49 @@ export default function MemoryPopup({ type }: { type: string }) {
               </Label>
             </div>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    `${
-                      errors?.date
-                        ? "focus:outline focus:outline-red-600 border border-red-600"
-                        : "border-0"
-                    } w-full bg-white-smoke py-5 px-4 justify-start text-left font-normal cursor-pointer",
-                    !date && "text-muted-foreground`
-                  )}
-                >
-                  {date ? (
-                    format(date, "PPP")
-                  ) : (
-                    <span className="text-gray-300">Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              {errors?.date && (
-                <p className="text-red-600 text-sm">{errors?.date?.message}</p>
-              )}
+            <Controller
+              name="date"
+              control={control}
+              render={({ field }) => (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        `${
+                          errors?.date
+                            ? "focus:outline focus:outline-red-600 border border-red-600"
+                            : "border-0"
+                        } w-full bg-white-smoke py-5 px-4 justify-start text-left font-normal cursor-pointer`,
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span className="text-gray-300">Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
 
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={handleDateChange}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={(date) => {
+                        field.onChange(date);
+                        trigger("date");
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+            />
+
+            {errors?.date && (
+              <p className="text-red-600 text-sm">{errors?.date?.message}</p>
+            )}
           </div>
 
           {/* status */}
@@ -266,15 +423,17 @@ export default function MemoryPopup({ type }: { type: string }) {
                 render={({ field }) => (
                   <Select
                     onValueChange={(value) => {
-                      field.onChange(value);
-                      // Trigger validation to ensure the form state updates
+                      // Ensure we're setting a valid enum value or undefined
+                      const validValue =
+                        value && value !== "" ? value : undefined;
+                      field.onChange(validValue);
                       trigger("status");
                     }}
-                    value={field.value}
+                    value={field.value || ""} // Convert undefined to empty string for Select component
                   >
                     <SelectTrigger
                       className={cn(
-                        "bg-white-smoke data-[placeholder]:text-gray-300 w-full  py-5",
+                        "bg-white-smoke data-[placeholder]:text-gray-300 w-full border-0 py-5",
                         errors?.status &&
                           "bg-white-smoke focus:outline focus:outline-red-600 border border-red-600"
                       )}
@@ -296,7 +455,6 @@ export default function MemoryPopup({ type }: { type: string }) {
                 )}
               />
 
-              {/* show select error */}
               {errors?.status && (
                 <p className="text-red-600 text-sm mt-2">
                   {errors?.status?.message}
@@ -323,10 +481,9 @@ export default function MemoryPopup({ type }: { type: string }) {
                 errors?.details
                   ? "focus:outline focus:outline-red-600 border border-red-600"
                   : "border-0"
-              } bg-white-smoke placeholder:text-gray-300`}
+              } bg-white-smoke placeholder:text-gray-300 overflow-hidden max-h-32 resize-y break-all whitespace-pre-wrap`}
             />
 
-            {/* show details error message */}
             {errors?.details && (
               <p className="text-red-600 text-sm mt-2">
                 {errors?.details?.message}
@@ -349,12 +506,15 @@ export default function MemoryPopup({ type }: { type: string }) {
             <Controller
               name="gallery"
               control={control}
+              rules={{
+                validate: validateGallery,
+              }}
               render={({
                 field: { onChange, value, ref },
                 fieldState: { error },
               }) => (
                 <div className="mt-1">
-                  {!value ? (
+                  {!value && !existingImageUrl ? (
                     <label
                       htmlFor="gallery-input"
                       className={`${
@@ -373,17 +533,18 @@ export default function MemoryPopup({ type }: { type: string }) {
                       <input
                         id="gallery-input"
                         type="file"
-                        name="file"
                         accept="image/*"
                         className="hidden"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
                             onChange(file);
+                            clearErrors("gallery");
                             if (previewUrl) {
                               URL.revokeObjectURL(previewUrl);
                             }
                             setPreviewUrl(URL.createObjectURL(file));
+                            setExistingImageUrl(null);
                           }
                         }}
                         ref={ref}
@@ -392,21 +553,26 @@ export default function MemoryPopup({ type }: { type: string }) {
                   ) : (
                     <div className="relative border-2 border-gray-200 border-dashed bg-white-smoke rounded-lg p-4">
                       <div className="flex items-center space-x-4">
-                        {previewUrl && (
-                          <div className="flex-shrink-0">
-                            <img
-                              src={previewUrl || "/placeholder.svg"}
-                              alt="Preview"
-                              className="w-16 h-16 object-cover rounded-lg"
-                            />
-                          </div>
-                        )}
+                        <div className="flex-shrink-0">
+                          <img
+                            src={
+                              previewUrl ||
+                              existingImageUrl ||
+                              "/placeholder.svg"
+                            }
+                            alt="Preview"
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                        </div>
+
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900 truncate">
-                            {value.name}
+                            {value ? value.name : ""}
                           </p>
                           <p className="text-sm text-gray-500">
-                            {(value.size / 1024 / 1024).toFixed(2)} MB
+                            {value
+                              ? `${(value.size / 1024 / 1024).toFixed(2)} MB`
+                              : ""}
                           </p>
                         </div>
                         <Button
@@ -429,21 +595,22 @@ export default function MemoryPopup({ type }: { type: string }) {
             />
           </div>
 
-          {/* create and edit button */}
           <DialogFooter>
             {type === "create" ? (
               <Button
                 type="submit"
-                className="bg-dark-cyan text-white hover:bg-dark-blue cursor-pointer"
+                disabled={isLoading}
+                className="bg-dark-cyan text-white hover:bg-dark-blue cursor-pointer disabled:opacity-50"
               >
-                Create
+                {isLoading ? "Creating..." : "Create"}
               </Button>
             ) : (
               <Button
                 type="submit"
-                className="bg-dark-blue text-white hover:bg-blue-950 cursor-pointer"
+                disabled={isLoading}
+                className="bg-dark-blue text-white hover:bg-blue-950 cursor-pointer disabled:opacity-50"
               >
-                Save Changes
+                {isLoading ? "Saving..." : "Save Changes"}
               </Button>
             )}
           </DialogFooter>

@@ -16,11 +16,12 @@ export default function RomanticCardComponent({
   session: Session | null;
 }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       <div className="w-full h-64 relative">
         {/* image */}
         <Image
           src={
+            item?.gallery?.toString() ||
             "https://i.pinimg.com/736x/e3/30/48/e330483583aba61ecdedfd80d9103388.jpg"
           }
           fill
@@ -31,24 +32,28 @@ export default function RomanticCardComponent({
         {/* edit and delete icons */}
         {session && (
           <div className="p-2 flex flex-col gap-2 items-end">
-            <DeletePopup />
+            <DeletePopup id={item?.id} />
             {/* edit popup */}
-            <MemoryPopup type="edit" />
+            <MemoryPopup type="edit" id={item?.id} />
           </div>
         )}
       </div>
 
-      <div className="text-dark-cyan flex justify-between items-center">
-        <h3 className="text-xl font-medium capitalize">{item?.location}</h3>
+      <div className="text-dark-cyan flex justify-between items-center w-full">
+        <h3 className="text-xl font-medium capitalize truncate w-2/3">
+          {item?.location}
+        </h3>
 
-        <p className="flex gap-2">
+        <p className="flex gap-2 w-1/2 justify-end">
           <Calendar size="20" color="#309898" variant="Broken" />
           <span>{formattedDate(item?.date)}</span>
         </p>
       </div>
 
       {/* description */}
-      <p className="line-clamp-3 text-justify h-20">{item?.details}</p>
+      <p className="line-clamp-3 text-justify h-18 w-full break-all">
+        {item?.details}
+      </p>
 
       {/* read more button */}
       <div className="relative group w-fit ml-auto pl-4">

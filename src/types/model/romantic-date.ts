@@ -4,7 +4,7 @@ interface RomanticDate {
   id?: number;
   location: string;
   date: Date;
-  gallery: File;
+  gallery: File | string;
   details: string;
   status?: PlanStatus;
 }

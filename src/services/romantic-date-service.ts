@@ -4,7 +4,9 @@ import { RomanticDate } from "@/types/model/romantic-date";
 
 // get all romantic dates
 const getAllRomanticDateList = async () => {
-  const response = await fetch(`${BASE_URL}/romantic-date`);
+  const response = await fetch(`${BASE_URL}/romantic-date`, {
+    next: { tags: ["romantic-dates"] },
+  });
   const romanticList = await response.json();
   return romanticList;
 };
@@ -44,13 +46,23 @@ const updateRomanticDateById = async (
 };
 
 // delete romantic date
-const deleteRomanticDateById = async (id: RomanticDate["id"]) => {
+const deleteRomanticDateById = async (ids: RomanticDate["id"]) => {
   const headers = await requestHeader();
-  const response = await fetch(`${BASE_URL}/romantic-date/${id}`, {
+
+  // ids is always an array
+  const idsArray = Array.isArray(ids) ? ids : [ids];
+
+  // convert all ids to integers
+  const integerIds = idsArray.map((id) => parseInt(id.toString()));
+
+  const response = await fetch(`${BASE_URL}/romantic-date`, {
     method: "DELETE",
     headers,
+    body: JSON.stringify(integerIds),
   });
   const res = await response.json();
+  console.log("REs : ", res);
+
   return res;
 };
 

@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.pinimg.com",
       },
+      {
+        protocol: "http",
+        hostname: "96.9.81.187",
+      },
     ],
   },
 };

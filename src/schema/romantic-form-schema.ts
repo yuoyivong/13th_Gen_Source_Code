@@ -26,5 +26,21 @@ const romanticFormSchema = z.object({
   }),
 });
 
-// expose schema
-export { romanticFormSchema };
+const romanticSubmissionSchema = z.object({
+  location: z.string().min(1),
+  date: z.date(),
+  gallery: z.string().url("Invalid gallery URL"),
+  details: z.string().min(1),
+});
+
+// Types derived from schemas
+type RomanticFormData = z.infer<typeof romanticFormSchema>;
+type RomanticSubmissionData = z.infer<typeof romanticSubmissionSchema>;
+
+// expose schemas and types
+export {
+  romanticFormSchema,
+  romanticSubmissionSchema,
+  type RomanticFormData,
+  type RomanticSubmissionData,
+};
