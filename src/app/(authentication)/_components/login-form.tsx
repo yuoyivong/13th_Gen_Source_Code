@@ -8,10 +8,14 @@ import { UserCredentails } from "@/types/auth/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeSlash, Key, Sms } from "iconsax-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginComponent() {
+  // define useRouter()
+  const { push } = useRouter();
+
   // state to manage whether to see the password or not
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -27,10 +31,21 @@ export default function LoginComponent() {
 
   // handle submit form login
   const handleFormSubmit = async (data: UserCredentails) => {
-    console.log("User logs in : ", data);
-    await loginAction(data);
+    try {
+      console.log("User logs in : ", data);
+      const response = await loginAction(data);
+      console.log("Response from login action: ", response);
+      if (response?.error) {
+        console.error("Login failed: ", response.error);
+        return;
+      }
 
-    reset();
+      push("/");
+    } catch (error) {
+      console.error("Error during login: ", error);
+    } finally {
+      reset();
+    }
   };
 
   // password visibility

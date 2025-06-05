@@ -20,10 +20,14 @@ import { Controller, useForm } from "react-hook-form";
 import LogoutPopup from "./popup/logout-popup";
 import { UserInformation } from "@/types/model/user-information";
 import { DEFAULT_IMAGE_URL } from "@/const/constant";
+import { handleUploadFile } from "@/lib/upload-file-lib";
+import { updateUserInfoAction } from "@/actions/user-action";
+import { APIResponse } from "@/types/response/api-response";
 
-export default function UserInfo() {
-  const [previewUrl, setPreviewUrl] = useState<string>(DEFAULT_IMAGE_URL);
+export default function UserInfo({ user }: { user: UserInformation }) {
+  const [previewUrl, setPreviewUrl] = useState<string>();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [fileImage, setFileImage] = useState<File | undefined>();
 
   // disable or enable input
   const [isEnable, setIsEnable] = useState(false);
@@ -37,10 +41,35 @@ export default function UserInfo() {
     reset,
   } = useForm<UserInformation>({
     resolver: zodResolver(userInfoSchema),
+    defaultValues: {
+      fullName: user?.fullName || "",
+      bio: user?.bio || "",
+      gender: user?.gender || "",
+    },
   });
 
-  const handleFormSubmit = (data: UserInformation) => {
+  // function to handle form submission
+  const handleFormSubmit = async (data: UserInformation) => {
     console.log("Data : ", data);
+
+    // send the file to /file/upload-file endpoint
+    let profile;
+    if (fileImage) {
+      profile = await handleUploadFile(fileImage);
+    }
+
+    // submission data
+    const submissionData: UserInformation = {
+      ...data,
+      profileUrl: profile?.payload?.fileUrl || "",
+    };
+
+    console.log("Submission Data : ", submissionData);
+
+    // call the update user info action
+    const response = await updateUserInfoAction(submissionData);
+
+    if (response?.status === "OK") setIsEnable(!isEnable);
   };
 
   // handle choose profile picture
@@ -54,6 +83,7 @@ export default function UserInfo() {
     if (file) {
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
+      setFileImage(file);
     }
   };
 
@@ -88,7 +118,8 @@ export default function UserInfo() {
             {/* profile image */}
             <div className="relative w-64 h-64">
               <Image
-                src={previewUrl}
+                {...register("profileUrl")}
+                src={previewUrl || user?.profileUrl || DEFAULT_IMAGE_URL}
                 fill
                 alt="Profile Image"
                 className="rounded-full object-cover"
@@ -145,7 +176,7 @@ export default function UserInfo() {
                   errors?.fullName
                     ? "focus:outline focus:outline-red-600 border border-red-600"
                     : "border-0"
-                } bg-white-smoke placeholder:text-gray-300 py-5 px-4`}
+                } bg-white-smoke placeholder:text-gray-300 py-5 px-4 capitalize`}
                 disabled={isEnable ? false : true}
               />
 
@@ -220,9 +251,8 @@ export default function UserInfo() {
               </div>
 
               <Input
-                {...register("email")}
                 type="email"
-                placeholder="monster@gmail.com"
+                value={user?.email}
                 className={`bg-white-smoke placeholder:text-gray-300 py-5 px-4 border-0`}
                 disabled
               />

@@ -1,7 +1,5 @@
 import formattedDate from "@/lib/format-date";
 import { getRomanticDateById } from "@/services/romantic-date-service";
-import { RomanticDate } from "@/types/model/romantic-date";
-import { APIResponse } from "@/types/response/api-response";
 import { Calendar, Heart } from "iconsax-react";
 import Image from "next/image";
 import React from "react";
@@ -12,9 +10,7 @@ export default async function MemoryDetailsPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const romanticDate = (await getRomanticDateById(
-    parseInt(slug)
-  )) as APIResponse<RomanticDate>;
+  const romanticDate = await getRomanticDateById(parseInt(slug));
   console.log("Data : ", romanticDate);
 
   return (
@@ -23,24 +19,30 @@ export default async function MemoryDetailsPage({
       <div className="w-full lg:w-1/2 space-y-6">
         {/* title */}
         <div>
-          <h2 className="text-2xl font-medium text-dark-cyan flex gap-3 items-center">
-            <Heart size="24" color="#309898" variant="Bold" />
-            <span className="capitalize">
+          <h2 className="text-2xl font-medium text-dark-cyan flex gap-3 pb-1">
+            <div>
+              <Heart size="24" color="#309898" variant="Bold" />
+            </div>
+            <span className="capitalize break-all">
               {romanticDate?.payload?.location}
             </span>
           </h2>
-          <div className="w-1/5 h-0.5 bg-gradient-to-r from-transparent via-dark-cyan/80 to-transparent rounded-full"></div>
+          <div className="w-auto h-0.5 bg-gradient-to-r from-transparent via-dark-cyan/80 to-transparent rounded-full"></div>
         </div>
 
         {/* description */}
-        <p className="text-justify">{romanticDate?.payload?.details}</p>
+        <p className="text-justify break-all">
+          {romanticDate?.payload?.details}
+        </p>
       </div>
 
       {/* right side image  */}
       <div className="relative w-full lg:w-1/2 pt-6 lg:pt-0 ">
         <Image
           src={
-            "https://i.pinimg.com/736x/69/3b/20/693b20535850f2a3209fb121a05c6ed5.jpg"
+            typeof romanticDate?.payload?.gallery === "string"
+              ? romanticDate.payload.gallery
+              : ""
           }
           width={736}
           height={1104}

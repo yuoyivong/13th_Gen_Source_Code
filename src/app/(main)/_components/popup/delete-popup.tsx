@@ -15,15 +15,28 @@ import { Button } from "@/components/ui/button";
 import { RomanticDate } from "@/types/model/romantic-date";
 import { Trash } from "iconsax-react";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 
-export default function DeletePopup({ id }: { id: RomanticDate["id"] }) {
+interface DeleteRomanticDateProps {
+  ids: RomanticDate["id"][];
+  label?: string;
+  onDeleted?: () => void;
+}
+
+export default function DeletePopup({
+  ids,
+  label,
+  onDeleted,
+}: DeleteRomanticDateProps) {
   const pathname = usePathname();
 
-  const handleDeleteRomanticDate = () => {
-    console.log("ID : ", id);
+  const handleDeleteRomanticDate = async () => {
+    console.log("IDs to delete: ", ids);
 
-    deleteRomanticDateAction(id);
+    const response = await deleteRomanticDateAction(ids);
+    if (response?.status === "OK") {
+      if (onDeleted) onDeleted();
+    }
   };
 
   return (
@@ -31,7 +44,7 @@ export default function DeletePopup({ id }: { id: RomanticDate["id"] }) {
       <AlertDialogTrigger asChild>
         {pathname === "/romantic-date" ? (
           <Button className="cursor-pointer bg-crimson-red/20 text-crimson-red hover:bg-crimson-red/30">
-            <Trash size="14" color="#CB0404" variant="Broken" /> Delete
+            <Trash size="14" color="#CB0404" variant="Broken" /> Delete {label}
           </Button>
         ) : (
           <button className="cursor-pointer p-2 rounded-full inline-flex bg-white/90 drop-shadow-steel-gray-xs">

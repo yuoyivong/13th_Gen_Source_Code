@@ -22,8 +22,8 @@ const addNewRomanticDateAction = async (item: RomanticDate) => {
 };
 
 // delete romantic date
-const deleteRomanticDateAction = async (id: RomanticDate["id"]) => {
-  const response = await deleteRomanticDateById(id);
+const deleteRomanticDateAction = async (ids: RomanticDate["id"][]) => {
+  const response = await deleteRomanticDateById(ids);
   console.log("Delete response : ", response);
 
   revalidateTag("romantic-date");

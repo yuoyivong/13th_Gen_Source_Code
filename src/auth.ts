@@ -28,14 +28,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       authorize: async (credentials) => {
         try {
-          const user = await loginService(credentials as UserCredentails);
-          console.log("Token user : ", user);
+          const response = await loginService(credentials as UserCredentails);
+          console.log("Token user : ", response);
 
-          if (!user) {
+          // Assuming your APIResponse has a 'payload' property with the user data
+          if (!response || !response.payload) {
             throw new Error("Invalid credentials");
           }
 
-          return user;
+          // Return only the user object as expected by NextAuth
+          return response.payload;
         } catch (error) {
           console.error("Authorize error:", error);
           return null;
@@ -75,16 +77,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       console.log("Token.user : ", token.user);
 
       if (token && session) {
+        // extract user id and token safely
+        const user = token.user as TokenUser;
+
         session.user = {
           ...session.user,
-          id: (token.user as TokenUser).id,
-          token: (token.user as TokenUser).payload.token,
+          id: user?.id ?? null,
+          token: user?.token ?? user?.payload?.token ?? null,
         };
       }
 
       // set session expiration based on JWT token expiration
       if (token.exp) {
-        session.expires = new Date(token.exp * 1000).toISOString();
+        session.expires = new Date(token.exp * 1000) as unknown as string &
+          Date;
       }
       console.log("Token session : ", session);
 

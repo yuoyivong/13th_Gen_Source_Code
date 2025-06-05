@@ -1,7 +1,8 @@
 interface TokenUser {
   // token: string;
   id: string;
-  payload: {
+  payload?: {
     token: string;
   };
+  token: string;
 }

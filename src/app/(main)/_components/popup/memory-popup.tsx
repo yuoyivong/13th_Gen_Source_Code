@@ -4,7 +4,6 @@ import {
   getRomanticDateAction,
   updatedRomanticDateAction,
 } from "@/actions/romantic-date-action";
-import { uploadFileAction } from "@/actions/upload-file-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -32,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PlanStatus } from "@/enum/status";
+import { handleUploadFile } from "@/lib/upload-file-lib";
 import { cn } from "@/lib/utils";
 import { romanticFormSchema } from "@/schema/romantic-form-schema";
 import type { RomanticDate } from "@/types/model/romantic-date";
@@ -118,13 +118,6 @@ export default function MemoryPopup({
       status: undefined, // Keep as undefined, not empty string
     },
   });
-
-  // function for handling upload file image
-  const handleUploadFile = async (file: File) => {
-    const response = await uploadFileAction(file);
-    console.log("Response file : ", response);
-    return response;
-  };
 
   // get value from form submission
   const handleFormSubmit = async (data: FormData) => {

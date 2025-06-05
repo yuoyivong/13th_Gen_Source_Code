@@ -4,17 +4,13 @@ import RomanticCardComponent from "./_components/card/romantic-card";
 import MemoryPopup from "./_components/popup/memory-popup";
 import { auth } from "@/auth";
 import { getAllRomanticDateList } from "@/services/romantic-date-service";
-import { APIResponse } from "@/types/response/api-response";
-import { RomanticDate } from "@/types/model/romantic-date";
 
 export default async function Home() {
   // get session
   const session = await auth();
 
   // get romantic date data
-  const romanticList = (await getAllRomanticDateList()) as APIResponse<
-    RomanticDate[]
-  >;
+  const romanticList = await getAllRomanticDateList();
   console.log("Romantic list : ", romanticList);
 
   return (

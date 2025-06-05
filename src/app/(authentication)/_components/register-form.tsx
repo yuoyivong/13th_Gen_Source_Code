@@ -1,4 +1,5 @@
 "use client";
+import { registerAction } from "@/actions/auth-action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,10 +8,12 @@ import { UserRegistration } from "@/types/auth/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeSlash, Key, Sms, User } from "iconsax-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function RegisterComponent() {
+  const { push } = useRouter();
   // state to manage whether to see the password or not
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -30,8 +33,25 @@ export default function RegisterComponent() {
   });
 
   // handle submit form login
-  const handleFormSubmit = (data: UserRegistration) => {
+  const handleFormSubmit = async (data: UserRegistration) => {
     console.log("User registers : ", data);
+    const newUser = {
+      fullName: data?.fullName,
+      email: data?.email,
+      password: data?.password,
+    };
+    try {
+      const response = await registerAction(newUser);
+      console.log("Response from register action: ", response);
+
+      if (response?.status === "CREATED") {
+        push("/login");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    } finally {
+      reset();
+    }
   };
 
   // password visibility
