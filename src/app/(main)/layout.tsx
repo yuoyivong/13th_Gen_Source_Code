@@ -5,6 +5,7 @@ import NavbarComponent from "@/components/navbar";
 import FooterComponent from "@/components/footer";
 import { auth } from "@/auth";
 import ProfileSnippet from "@/components/profile-snippet";
+import { Toaster } from "@/components/ui/sonner";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${rubik.className} text-dark-blue antialiased`}>
-        <div className="min-h-screen flex flex-col justify-between space-y-10 ">
+        <main className="min-h-screen flex flex-col justify-between space-y-10 ">
           <div className="space-y-5">
             {/* navbar */}
             <NavbarComponent
@@ -41,7 +42,8 @@ export default async function RootLayout({
             {children}
           </div>
           <FooterComponent />
-        </div>
+        </main>
+        <Toaster />
       </body>
     </html>
   );

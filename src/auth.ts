@@ -4,10 +4,19 @@ import { loginService } from "./services/auth-service";
 import { UserCredentails } from "./types/auth/auth";
 
 // a function to decode JWT and get expiration
-
 const getJWTExpiration = (token: string): Date | null => {
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (!token || typeof token !== "string" || token.split(".").length !== 3) {
+      return null;
+    }
+    let base64 = token.split(".")[1];
+    // Convert base64url to base64
+    base64 = base64.replace(/-/g, "+").replace(/_/g, "/");
+    // Pad with '=' if needed
+    while (base64.length % 4) {
+      base64 += "=";
+    }
+    const payload = JSON.parse(atob(base64));
     if (payload.exp) {
       return new Date(payload.exp * 1000);
     }

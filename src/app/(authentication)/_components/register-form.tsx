@@ -7,13 +7,18 @@ import { signUpSchema } from "@/schema/auth-schema";
 import { UserRegistration } from "@/types/auth/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeSlash, Key, Sms, User } from "iconsax-react";
+import { LoaderIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function RegisterComponent() {
   const { push } = useRouter();
+  // loading state
+  const [loading, setLoading] = useState<boolean>(false);
+
   // state to manage whether to see the password or not
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -34,7 +39,7 @@ export default function RegisterComponent() {
 
   // handle submit form login
   const handleFormSubmit = async (data: UserRegistration) => {
-    console.log("User registers : ", data);
+    setLoading(true);
     const newUser = {
       fullName: data?.fullName,
       email: data?.email,
@@ -45,11 +50,16 @@ export default function RegisterComponent() {
       console.log("Response from register action: ", response);
 
       if (response?.status === "CREATED") {
+        // add toast alert for success
+        toast.success(response?.message || "Registration successful!");
+
         push("/login");
       }
     } catch (error) {
+      toast.error("Registration failed. Please try again.");
       console.error("Error during registration:", error);
     } finally {
+      setLoading(false);
       reset();
     }
   };
@@ -241,10 +251,18 @@ export default function RegisterComponent() {
 
       {/* sign up button */}
       <Button
+        disabled={loading}
         type="submit"
         className="text-base cursor-pointer bg-dark-cyan text-white py-5 rounded-lg w-full font-bold hover:bg-dark-blue"
       >
-        Sign Up
+        {loading ? (
+          <p className="flex items-center gap-2">
+            <LoaderIcon />
+            <span>Signing In ...</span>
+          </p>
+        ) : (
+          "Sign Up"
+        )}
       </Button>
 
       {/* underline */}

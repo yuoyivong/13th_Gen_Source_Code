@@ -10,5 +10,9 @@ export default async function RomanticDateTable() {
       ?.map((item) => item?.id)
       .filter((id): id is number => typeof id === "number") ?? [];
 
-  return <RomanticDateTableClient dataList={dataList} allIds={allIds} />;
+  console.log("data list : ", dataList);
+
+  return (
+    <RomanticDateTableClient dataList={dataList?.payload} allIds={allIds} />
+  );
 }

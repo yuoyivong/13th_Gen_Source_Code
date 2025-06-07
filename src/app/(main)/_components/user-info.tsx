@@ -22,7 +22,8 @@ import { UserInformation } from "@/types/model/user-information";
 import { DEFAULT_IMAGE_URL } from "@/const/constant";
 import { handleUploadFile } from "@/lib/upload-file-lib";
 import { updateUserInfoAction } from "@/actions/user-action";
-import { APIResponse } from "@/types/response/api-response";
+import { toast } from "sonner";
+import { LoaderIcon } from "lucide-react";
 
 export default function UserInfo({ user }: { user: UserInformation }) {
   const [previewUrl, setPreviewUrl] = useState<string>();
@@ -31,6 +32,9 @@ export default function UserInfo({ user }: { user: UserInformation }) {
 
   // disable or enable input
   const [isEnable, setIsEnable] = useState(false);
+
+  // loading state
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -50,26 +54,37 @@ export default function UserInfo({ user }: { user: UserInformation }) {
 
   // function to handle form submission
   const handleFormSubmit = async (data: UserInformation) => {
-    console.log("Data : ", data);
+    setLoading(true);
 
-    // send the file to /file/upload-file endpoint
-    let profile;
-    if (fileImage) {
-      profile = await handleUploadFile(fileImage);
+    try {
+      // send the file to /file/upload-file endpoint
+      let profile;
+      if (fileImage) {
+        profile = await handleUploadFile(fileImage);
+      }
+
+      // submission data
+      const submissionData: UserInformation = {
+        ...data,
+        profileUrl: profile?.payload?.fileUrl || "",
+      };
+
+      // call the update user info action
+      const response = await updateUserInfoAction(submissionData);
+
+      if (response?.status === "OK") {
+        setIsEnable(!isEnable);
+        toast.success(response?.message || "Updated successfully.");
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-    // submission data
-    const submissionData: UserInformation = {
-      ...data,
-      profileUrl: profile?.payload?.fileUrl || "",
-    };
-
-    console.log("Submission Data : ", submissionData);
-
-    // call the update user info action
-    const response = await updateUserInfoAction(submissionData);
-
-    if (response?.status === "OK") setIsEnable(!isEnable);
   };
 
   // handle choose profile picture
@@ -139,7 +154,7 @@ export default function UserInfo({ user }: { user: UserInformation }) {
                 type="button"
                 className="bg-dark-cyan hover:bg-dark-blue cursor-pointer"
                 onClick={handleChooseProfile}
-                disabled={isEnable ? false : true}
+                disabled={!isEnable}
               >
                 Choose Profile Picture
               </Button>
@@ -147,7 +162,7 @@ export default function UserInfo({ user }: { user: UserInformation }) {
                 type="button"
                 className="border border-dark-cyan bg-transparent text-dark-cyan hover:text-white hover:bg-dark-blue hover:border-dark-blue cursor-pointer"
                 onClick={handleSetDefaultProfile}
-                disabled={isEnable ? false : true}
+                disabled={!isEnable}
               >
                 Set Default Picture
               </Button>
@@ -177,7 +192,7 @@ export default function UserInfo({ user }: { user: UserInformation }) {
                     ? "focus:outline focus:outline-red-600 border border-red-600"
                     : "border-0"
                 } bg-white-smoke placeholder:text-gray-300 py-5 px-4 capitalize`}
-                disabled={isEnable ? false : true}
+                disabled={!isEnable}
               />
 
               {/* show error on location field */}
@@ -211,7 +226,7 @@ export default function UserInfo({ user }: { user: UserInformation }) {
                       trigger("gender");
                     }}
                     value={field.value}
-                    disabled={isEnable ? false : true}
+                    disabled={!isEnable}
                   >
                     <SelectTrigger
                       className={cn(
@@ -275,7 +290,7 @@ export default function UserInfo({ user }: { user: UserInformation }) {
                 type="text"
                 placeholder="Please enter your bio"
                 className={`bg-white-smoke placeholder:text-gray-300 py-5 px-4 border-0`}
-                disabled={isEnable ? false : true}
+                disabled={!isEnable}
               />
             </div>
           </div>
@@ -301,10 +316,18 @@ export default function UserInfo({ user }: { user: UserInformation }) {
                 Cancel
               </Button>
               <Button
+                disabled={loading}
                 type="submit"
                 className="bg-dark-blue px-8 text-base cursor-pointer"
               >
-                Save Changes
+                {loading ? (
+                  <p className="flex items-center gap-2">
+                    <LoaderIcon />
+                    <span>Saving ...</span>
+                  </p>
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             </div>
           )}

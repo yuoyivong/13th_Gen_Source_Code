@@ -50,9 +50,11 @@ import {
   Status,
   Trash,
 } from "iconsax-react";
+import { LoaderIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 // Create schemas that handle both File and optional gallery for edit mode
@@ -170,10 +172,15 @@ export default function MemoryPopup({
 
       if (
         response &&
-        (response.status === "CREATED" || response.status === "OK")
+        (response?.status === "CREATED" || response?.status === "OK")
       ) {
         setIsOpen(false);
         resetForm();
+
+        // toast alert for sucess
+        toast.success(
+          response?.message || "The process is completed successfully."
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -595,7 +602,14 @@ export default function MemoryPopup({
                 disabled={isLoading}
                 className="bg-dark-cyan text-white hover:bg-dark-blue cursor-pointer disabled:opacity-50"
               >
-                {isLoading ? "Creating..." : "Create"}
+                {isLoading ? (
+                  <p className="flex items-center gap-2">
+                    <LoaderIcon />
+                    <span>Creating ...</span>
+                  </p>
+                ) : (
+                  "Create"
+                )}
               </Button>
             ) : (
               <Button
@@ -603,7 +617,14 @@ export default function MemoryPopup({
                 disabled={isLoading}
                 className="bg-dark-blue text-white hover:bg-blue-950 cursor-pointer disabled:opacity-50"
               >
-                {isLoading ? "Saving..." : "Save Changes"}
+                {isLoading ? (
+                  <p className="flex items-center gap-2">
+                    <LoaderIcon />
+                    <span>Saving ...</span>
+                  </p>
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             )}
           </DialogFooter>

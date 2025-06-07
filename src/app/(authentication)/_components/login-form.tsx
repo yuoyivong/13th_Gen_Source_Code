@@ -7,12 +7,17 @@ import { loginSchema } from "@/schema/auth-schema";
 import { UserCredentails } from "@/types/auth/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeSlash, Key, Sms } from "iconsax-react";
+import { LoaderIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function LoginComponent() {
+  // handle loading state
+  const [loading, setLoading] = useState<boolean>(false);
+
   // define useRouter()
   const { push } = useRouter();
 
@@ -31,6 +36,7 @@ export default function LoginComponent() {
 
   // handle submit form login
   const handleFormSubmit = async (data: UserCredentails) => {
+    setLoading(true);
     try {
       console.log("User logs in : ", data);
       const response = await loginAction(data);
@@ -40,10 +46,15 @@ export default function LoginComponent() {
         return;
       }
 
+      // toast alert for success
+      toast.success(response?.message || "Login successful!");
+
       push("/");
     } catch (error) {
+      toast.error("Login failed. Please check your credentials and try again.");
       console.error("Error during login: ", error);
     } finally {
+      setLoading(false);
       reset();
     }
   };
@@ -142,10 +153,18 @@ export default function LoginComponent() {
 
       {/* sign in button */}
       <Button
+        disabled={loading}
         type="submit"
         className="text-base cursor-pointer bg-dark-cyan text-white py-5 rounded-lg w-full font-bold hover:bg-dark-blue"
       >
-        Login
+        {loading ? (
+          <p className="flex items-center gap-2">
+            <LoaderIcon />
+            <span>Logging In ...</span>
+          </p>
+        ) : (
+          "Login"
+        )}
       </Button>
 
       {/* underline */}

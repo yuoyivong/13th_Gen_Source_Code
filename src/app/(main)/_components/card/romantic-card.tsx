@@ -21,7 +21,7 @@ export default function RomanticCardComponent({
         {/* image */}
         <Image
           src={
-            item?.gallery?.toString() ||
+            item?.gallery ||
             "https://i.pinimg.com/736x/e3/30/48/e330483583aba61ecdedfd80d9103388.jpg"
           }
           fill
@@ -32,7 +32,7 @@ export default function RomanticCardComponent({
         {/* edit and delete icons */}
         {session && (
           <div className="p-2 flex flex-col gap-2 items-end">
-            <DeletePopup id={item?.id} />
+            <DeletePopup ids={[item?.id]} />
             {/* edit popup */}
             <MemoryPopup type="edit" id={item?.id} />
           </div>

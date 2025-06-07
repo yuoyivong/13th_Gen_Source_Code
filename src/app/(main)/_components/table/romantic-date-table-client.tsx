@@ -16,14 +16,13 @@ import { cn } from "@/lib/utils";
 import ActionCell from "./action-cell";
 import StatusCell from "./status-cell";
 import SelectedCheckbox from "./selected-checkbox";
-import { APIResponse } from "@/types/response/api-response";
 import { RomanticDate } from "@/types/model/romantic-date";
 
 export default function RomanticDateTableClient({
   dataList,
   allIds,
 }: {
-  dataList: APIResponse<RomanticDate[]>;
+  dataList: RomanticDate[];
   allIds: number[];
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -102,8 +101,20 @@ export default function RomanticDateTableClient({
             ))}
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {dataList?.payload?.map((item, index) => (
+          {dataList?.length === 0 && (
+            <TableRow>
+              <TableCell
+                className="text-steel-gray text-center border-b border-b-steel-gray/30 text-base"
+                colSpan={ROMANTIC_DATE_COLUMNS.length}
+              >
+                No record to show
+              </TableCell>
+            </TableRow>
+          )}
+
+          {dataList?.map((item, index) => (
             <TableRow
               key={item?.id}
               className="odd:bg-white even:bg-white-smoke"

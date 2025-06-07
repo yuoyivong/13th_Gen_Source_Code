@@ -5,16 +5,26 @@ import { APIResponse } from "@/types/response/api-response";
 
 // get all romantic dates
 const getAllRomanticDateList = async () => {
-  const response = await fetch(`${BASE_URL}/romantic-date`, {
-    next: { tags: ["romantic-dates"] },
-  });
+  const headers = await requestHeader();
+  const response = await fetch(
+    `${BASE_URL}/romantic-date?pageNo=0&pageSize=10&sortBy=id&sortDirection=ASC`,
+    {
+      headers,
+      next: { tags: ["romantic-dates"] },
+    }
+  );
+  console.log("Romantic list from service: ", response);
   const romanticList = await response.json();
+
   return romanticList as APIResponse<RomanticDate[]>;
 };
 
 // get romantic date by id
 const getRomanticDateById = async (id: RomanticDate["id"]) => {
-  const response = await fetch(`${BASE_URL}/romantic-date/${id}`);
+  const headers = await requestHeader();
+  const response = await fetch(`${BASE_URL}/romantic-date/${id}`, {
+    headers,
+  });
   const romanticDate = await response.json();
   return romanticDate as APIResponse<RomanticDate>;
 };

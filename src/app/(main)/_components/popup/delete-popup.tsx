@@ -14,8 +14,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { RomanticDate } from "@/types/model/romantic-date";
 import { Trash } from "iconsax-react";
+import { LoaderIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface DeleteRomanticDateProps {
   ids: RomanticDate["id"][];
@@ -28,14 +30,30 @@ export default function DeletePopup({
   label,
   onDeleted,
 }: DeleteRomanticDateProps) {
+  // loading state
+  const [loading, setLoading] = useState<boolean>(false);
+
   const pathname = usePathname();
 
   const handleDeleteRomanticDate = async () => {
-    console.log("IDs to delete: ", ids);
+    setLoading(true);
 
-    const response = await deleteRomanticDateAction(ids);
-    if (response?.status === "OK") {
-      if (onDeleted) onDeleted();
+    try {
+      const response = await deleteRomanticDateAction(ids);
+      if (response?.status === "OK") {
+        if (onDeleted) onDeleted();
+        toast.success(response?.message || "Deleted Successfully.");
+      } else {
+        toast.error("Failed to delete.");
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +88,14 @@ export default function DeletePopup({
             className="cursor-pointer bg-crimson-red hover:bg-red-800"
             onClick={handleDeleteRomanticDate}
           >
-            Continue
+            {loading ? (
+              <p className="flex items-center gap-2">
+                <LoaderIcon />
+                <span>Deleting ...</span>
+              </p>
+            ) : (
+              "Continue"
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
